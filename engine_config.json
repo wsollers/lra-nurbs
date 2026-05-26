@@ -1,0 +1,26 @@
+{
+    "window": {
+        "width":  1280,
+        "height": 720,
+        "title":  "NDDE Engine"
+    },
+    "render": {
+        "vsync":                false,
+        "max_frames_in_flight": 2
+    },
+    "camera": {
+        "position": [0.0, 0.0, 5.0],
+        "target":   [0.0, 0.0, 0.0],
+        "fov":      45.0,
+        "near":     0.1,
+        "far":      100.0
+    },
+    "simulation": {
+        "tau":            0.5,
+        "speed":          1.0,
+        "tessellation":   256,
+        "arena_size_mb":  128,
+        "threaded_runtime": true
+    },
+    "assets_dir": "assets"
+}
