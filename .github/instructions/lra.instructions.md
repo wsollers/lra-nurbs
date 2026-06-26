@@ -2,7 +2,7 @@
 GENERATED FILE — DO NOT EDIT BY HAND.
 
 Source repo: wsollers/lra-governance
-Source commit: 6b4b1beb46a83f1c6ebb32cdd0866aa7954c0244
+Source commit: 24580f56384be0e7d70066be9a19799f9d1c3e0c
 Generated from:
 - docs/governance/...
 - docs/architecture/...
@@ -48,6 +48,25 @@ C++ / Vulkan / geometry / simulation rules apply only to `lra-nurbs`. They must
 not be injected into volume content instructions.
 
 Use local CMake, tests, and repo validators for implementation changes.
+
+## Implementation Standards
+
+`lra-nurbs` is a C++23 / Vulkan / geometry / simulation codebase. Keep new C++
+modern, typed, and explicit: prefer scoped enums, value types, RAII ownership,
+`std::span`, `std::optional`, `std::expected`, `std::string_view`, and
+`[[nodiscard]]` where they clarify contracts. Avoid raw ownership, hidden global
+state, and stringly typed protocols unless a boundary API requires them.
+
+Follow the architecture visible in the source tree: domain code belongs under
+the appropriate `ndde` namespace and subnamespace, rendering/platform concerns
+stay separated from math and simulation kernels, and reusable abstractions
+should have a clear caller before they are promoted. Names should describe the
+domain concept or service responsibility rather than implementation mechanics.
+
+Keep the C++ Core Guidelines in mind, especially around ownership, lifetime,
+copy/move behavior, slicing, and explicit contracts. The local clang-tidy
+configuration already checks selected `cppcoreguidelines-*` rules; do not work
+around those warnings without documenting the reason in code or tests.
 
 ## Build And Validation
 
