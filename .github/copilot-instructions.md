@@ -2,7 +2,7 @@
 GENERATED FILE — DO NOT EDIT BY HAND.
 
 Source repo: wsollers/lra-governance
-Source commit: 24580f56384be0e7d70066be9a19799f9d1c3e0c
+Source commit: c64f6a812ffb0682bd9b9b53527672cab8c09851
 Generated from:
 - docs/governance/...
 - docs/architecture/...
@@ -49,6 +49,9 @@ not be injected into volume content instructions.
 
 Use local CMake, tests, and repo validators for implementation changes.
 
+Canonical architecture and layout guidance lives in
+`docs/architecture/lra-nurbs-architecture.md`.
+
 ## Implementation Standards
 
 `lra-nurbs` is a C++23 / Vulkan / geometry / simulation codebase. Keep new C++
@@ -67,6 +70,23 @@ Keep the C++ Core Guidelines in mind, especially around ownership, lifetime,
 copy/move behavior, slicing, and explicit contracts. The local clang-tidy
 configuration already checks selected `cppcoreguidelines-*` rules; do not work
 around those warnings without documenting the reason in code or tests.
+
+## Layout Overlay
+
+Follow the canonical architecture layout:
+
+- C++ production code belongs under `src/` by domain boundary.
+- Tests belong under `tests/` and should exercise kernels/services without
+  requiring an interactive renderer where possible.
+- GLSL shader source belongs under `shaders/`.
+- CMake helpers belong under `cmake/`.
+- Portable Linux build definitions belong under `docker/`.
+- Local design notes belong under `docs/`; avoid leaving scratch prototypes
+  there unless they are intentionally curated design references.
+- Tools and one-off helpers belong under `tools/`.
+
+Do not commit generated build trees, transient runtime UI state, or scratch
+artifacts as architecture.
 
 ## Build And Validation
 
