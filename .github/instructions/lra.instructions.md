@@ -2,14 +2,14 @@
 GENERATED FILE — DO NOT EDIT BY HAND.
 
 Source repo: wsollers/lra-governance
-Source commit: d98bb51fc80e683b38a9d1e76f4a0c91037ede0a
+Source commit: 36fd69ac2e23b406e522c0c753400ce7f3938ff0
 Generated from:
 - docs/governance/...
 - docs/architecture/...
 - docs/governance/repo-overlays/lra-nurbs.md
 
 Regenerate from lra-governance.
-Emergency downstream edits must be ported upstream before the next sync.
+Emergency downstream edits must be ported upstream before regeneration.
 -->
 
 # LRA Repository Instructions
@@ -23,7 +23,7 @@ concise and refer to canonical governance docs rather than copying large docs.
 - Follow the owning repository boundary for every task.
 - Do not include secrets, credentials, tokens, or machine-local private values.
 - Do not modify mathematical content during governance or wrapper-generation tasks.
-- Do not touch `Learning-Real-Analysis/scripts/`.
+- Do not touch the retired `Learning-Real-Analysis` monorepo.
 - Port emergency downstream instruction repairs back to `lra-governance`.
 
 ## Repo Overlay
@@ -42,9 +42,8 @@ Owned concerns:
 
 ## Agent Scope
 
-C++ / Vulkan / geometry / simulation rules apply only to `lra-nurbs` and the
-monorepo `nurbs_dde/` mirror. They must not be injected into volume content
-instructions.
+C++ / Vulkan / geometry / simulation rules apply only to `lra-nurbs`. They must
+not be injected into volume content instructions.
 
 Use local CMake, tests, and repo validators for implementation changes.
 
