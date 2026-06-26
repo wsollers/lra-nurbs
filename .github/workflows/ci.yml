@@ -70,7 +70,7 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           cmake -S . -B build ^
-            -G "Visual Studio 17 2022" -A x64 ^
+            -G Ninja ^
             -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} ^
             -DENABLE_SANITIZERS=OFF ^
             -DNDDE_ENABLE_CLANG_TIDY=OFF
@@ -80,13 +80,12 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cmake --build build --config ${{ matrix.build-type }} --parallel
+          cmake --build build --parallel
 
       - name: Test Windows MSVC
         if: matrix.mode == 'windows-msvc'
         shell: cmd
-        working-directory: build
-        run: ctest -C ${{ matrix.build-type }} --output-on-failure --parallel 4
+        run: ctest --test-dir build --output-on-failure --parallel 4
 
       - name: Build Linux Clang container image
         if: matrix.mode == 'linux-clang-container'
