@@ -2,6 +2,7 @@
 #include "math/Conics.hpp"
 #include "numeric/ops.hpp"
 #include <glm/glm.hpp>
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 #include <limits>

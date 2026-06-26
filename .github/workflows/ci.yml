@@ -1,50 +1,57 @@
-# =============================================================
-# ci.yml — lra-nurbs
-# Builds on Windows (MSVC x64) and Linux (Clang x64).
-# Runs CodeQL C++ analysis on the Linux build.
-#
-# Triggers:
-#   push / PR to main or develop on relevant paths.
-#   Weekly scheduled CodeQL scan (Sunday 02:00 UTC).
-# =============================================================
-
 name: CI
 
 on:
   push:
     branches: [main, develop]
     paths:
+      - 'assets/**'
+      - 'cmake/**'
+      - 'docker/**'
+      - 'shaders/**'
       - 'src/**'
       - 'tests/**'
-      - 'shaders/**'
-      - 'cmake/**'
+      - '.github/workflows/ci.yml'
       - 'CMakeLists.txt'
+      - 'engine_config.json'
   pull_request:
     branches: [main]
     paths:
+      - 'assets/**'
+      - 'cmake/**'
+      - 'docker/**'
+      - 'shaders/**'
       - 'src/**'
       - 'tests/**'
-      - 'shaders/**'
-      - 'cmake/**'
+      - '.github/workflows/ci.yml'
       - 'CMakeLists.txt'
+      - 'engine_config.json'
   schedule:
-    - cron: '0 2 * * 0'   # weekly CodeQL scan, Sunday 02:00 UTC
+    - cron: '0 2 * * 0'
   workflow_dispatch:
 
 jobs:
-
-  # ===========================================================
-  # Job 1: Windows x64 — MSVC
-  # ===========================================================
-  build-windows:
-    name: Windows x64 · MSVC
-    runs-on: windows-latest
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x64 · MSVC
+            os: windows-latest
+            mode: windows-msvc
+            build-type: Release
+          - name: Linux x64 · Clang container
+            os: ubuntu-24.04
+            mode: linux-clang-container
+            build-type: Release
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install Vulkan SDK
+        if: matrix.mode == 'windows-msvc'
         uses: jakoch/install-vulkan-sdk-action@v1
         with:
           vulkan_version: '1.3.296.0'
@@ -52,77 +59,58 @@ jobs:
           cache: true
 
       - name: Install Python 3
+        if: matrix.mode == 'windows-msvc'
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Configure (MSVC Release)
+      - name: Configure Windows MSVC
+        if: matrix.mode == 'windows-msvc'
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           cmake -S . -B build ^
             -G "Visual Studio 17 2022" -A x64 ^
-            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} ^
             -DENABLE_SANITIZERS=OFF ^
             -DNDDE_ENABLE_CLANG_TIDY=OFF
 
-      - name: Build
+      - name: Build Windows MSVC
+        if: matrix.mode == 'windows-msvc'
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cmake --build build --config Release --parallel
+          cmake --build build --config ${{ matrix.build-type }} --parallel
 
-      - name: Test
+      - name: Test Windows MSVC
+        if: matrix.mode == 'windows-msvc'
         shell: cmd
         working-directory: build
-        run: ctest -C Release --output-on-failure --parallel 4
+        run: ctest -C ${{ matrix.build-type }} --output-on-failure --parallel 4
 
-  # ===========================================================
-  # Job 2: Linux x64 — Clang
-  # ===========================================================
-  build-linux:
-    name: Linux x64 · Clang
-    runs-on: ubuntu-24.04
+      - name: Build Linux Clang container image
+        if: matrix.mode == 'linux-clang-container'
+        run: docker build -t lra-nurbs-linux -f docker/linux-clang.Dockerfile .
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install system dependencies
+      - name: Configure, build, and test in Linux container
+        if: matrix.mode == 'linux-clang-container'
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends \
-            clang-18 lld-18 \
-            libvulkan-dev vulkan-validationlayers-dev glslang-tools \
-            libxinerama-dev libxcursor-dev libxi-dev libxrandr-dev \
-            libwayland-dev wayland-protocols libxkbcommon-dev \
-            cmake ninja-build python3
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            lra-nurbs-linux \
+            bash -lc 'cmake -S . -B build \
+              -G Ninja \
+              -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
+              -DCMAKE_C_COMPILER=clang-18 \
+              -DCMAKE_CXX_COMPILER=clang++-18 \
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fexperimental-library" \
+              -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -fexperimental-library" \
+              -DENABLE_SANITIZERS=OFF \
+              -DNDDE_ENABLE_CLANG_TIDY=OFF &&
+            cmake --build build --parallel &&
+            ctest --test-dir build --output-on-failure --parallel 4'
 
-      - name: Set Clang as default compiler
-        run: |
-          sudo update-alternatives --install /usr/bin/cc  cc  /usr/bin/clang-18 100
-          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-18 100
-
-      - name: Configure (Clang Release)
-        run: |
-          cmake -S . -B build \
-            -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_C_COMPILER=clang-18 \
-            -DCMAKE_CXX_COMPILER=clang++-18 \
-            -DENABLE_SANITIZERS=OFF \
-            -DNDDE_ENABLE_CLANG_TIDY=OFF
-
-      - name: Build
-        run: cmake --build build --parallel
-
-      - name: Test
-        working-directory: build
-        run: ctest --output-on-failure --parallel 4
-
-  # ===========================================================
-  # Job 3: CodeQL — C++ analysis (Linux Clang build)
-  # ===========================================================
   codeql:
     name: CodeQL · C++
     runs-on: ubuntu-24.04
@@ -140,10 +128,12 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
             clang-18 lld-18 \
-            libvulkan-dev vulkan-validationlayers-dev glslang-tools \
+            libc++-18-dev libc++abi-18-dev libunwind-18-dev \
+            libgl1-mesa-dev libvulkan-dev \
+            vulkan-utility-libraries-dev vulkan-validationlayers glslang-tools \
             libxinerama-dev libxcursor-dev libxi-dev libxrandr-dev \
             libwayland-dev wayland-protocols libxkbcommon-dev \
-            cmake ninja-build python3
+            cmake ninja-build python3 pkg-config
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -156,20 +146,22 @@ jobs:
             paths-ignore:
               - build
 
-      - name: Configure (for CodeQL)
+      - name: Configure for CodeQL
         run: |
           cmake -S . -B build \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_C_COMPILER=clang-18 \
             -DCMAKE_CXX_COMPILER=clang++-18 \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fexperimental-library" \
+            -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -fexperimental-library" \
             -DENABLE_SANITIZERS=OFF \
             -DNDDE_ENABLE_CLANG_TIDY=OFF
 
-      - name: Build (traced by CodeQL)
+      - name: Build traced by CodeQL
         run: cmake --build build --parallel
 
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: '/language:c-cpp'

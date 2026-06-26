@@ -37,6 +37,25 @@ sudo update-alternatives --install /usr/bin/clang   clang   /usr/bin/clang-17   
 
 ## Build
 
+The Linux CI path uses the checked-in Clang container:
+
+```bash
+docker build -t lra-nurbs-linux -f docker/linux-clang.Dockerfile .
+docker run --rm -v "$PWD:/workspace" -w /workspace lra-nurbs-linux bash -lc \
+  'cmake -S . -B build -G Ninja \
+     -DCMAKE_BUILD_TYPE=Release \
+     -DCMAKE_C_COMPILER=clang-18 \
+     -DCMAKE_CXX_COMPILER=clang++-18 \
+     -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fexperimental-library" \
+     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -fexperimental-library" \
+     -DENABLE_SANITIZERS=OFF \
+     -DNDDE_ENABLE_CLANG_TIDY=OFF &&
+   cmake --build build --parallel &&
+   ctest --test-dir build --output-on-failure --parallel 4'
+```
+
+Native Linux builds use the same CMake shape:
+
 ```bash
 # Configure (Debug — includes ASan + UBSan)
 cmake -B build -G Ninja \

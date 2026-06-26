@@ -1,6 +1,7 @@
 // telemetry/TelemetryWriter.cpp
 
 #include "telemetry/TelemetryWriter.hpp"
+#include <algorithm>
 #include <cassert>
 #include <chrono>
 #include <format>
