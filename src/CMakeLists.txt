@@ -132,8 +132,11 @@ add_executable(nurbs_dde
     app/SceneFactories.cpp
     app/SurfaceMeshCache.cpp
     app/workbenches/Learning/LearningSimulation.cpp
+    app/workbenches/IntegrationDerivativeLab/IntegrationDerivativeLabWorkbench.cpp
     app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.cpp
+    app/workbenches/TaylorExpansionLab/TaylorExpansionLabWorkbench.cpp
     app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.cpp
+    app/workbenches/WavePredatorPrey/WavePredatorPreyWorkbench.cpp
     app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.cpp
     app/workbenches/FunctionDerivative/FunctionDerivativeWorkbench.cpp
     app/workbenches/WorkbenchRegistry.cpp

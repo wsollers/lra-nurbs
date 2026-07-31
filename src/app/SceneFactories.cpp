@@ -4,9 +4,9 @@
 #include "app/SceneFactories.hpp"
 #include "app/SimulationLabPicker.hpp"
 #include "app/workbenches/Learning/LearningSimulation.hpp"
-#include "app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.hpp"
-#include "app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.hpp"
-#include "app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/IntegrationDerivativeLabWorkbench.hpp"
+#include "app/workbenches/TaylorExpansionLab/TaylorExpansionLabWorkbench.hpp"
+#include "app/workbenches/WavePredatorPrey/WavePredatorPreyWorkbench.hpp"
 #include "app/workbenches/WorkbenchRegistry.hpp"
 
 #include <utility>
@@ -16,9 +16,9 @@ namespace ndde {
 void register_default_simulations(SimulationRegistry& registry,
                                   SimulationSwitchRequest switch_request) {
     registry.add_runtime<SimulationLabPicker>("Lab Picker", std::move(switch_request));
-    registry.add_runtime<SimulationWavePredatorPrey>("Smoke Test - Wave Predator-Prey");
-    registry.add_runtime<SimulationIntegrationDerivativeLab>("Integration & Derivative Lab");
-    registry.add_runtime<SimulationTaylorExpansionLab>("Taylor Expansion Lab");
+    register_wave_predator_prey_workbench(registry);
+    register_integration_derivative_lab_workbench(registry);
+    register_taylor_expansion_lab_workbench(registry);
 }
 
 void register_learning_simulations(SimulationRegistry& registry) {

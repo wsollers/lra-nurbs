@@ -45,8 +45,11 @@ add_executable(ndde_tests
     ${CMAKE_SOURCE_DIR}/src/app/SceneFactories.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SurfaceMeshCache.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/Learning/LearningSimulation.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/IntegrationDerivativeLabWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/TaylorExpansionLab/TaylorExpansionLabWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/WavePredatorPrey/WavePredatorPreyWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/FunctionDerivative/FunctionDerivativeWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/WorkbenchRegistry.cpp
