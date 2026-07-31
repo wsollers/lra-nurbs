@@ -15,6 +15,7 @@
 #include <gtest/gtest.h>
 #include <glm/gtc/epsilon.hpp>
 
+#include <algorithm>
 #include <cmath>
 
 namespace {
@@ -243,6 +244,14 @@ TEST(AllSimulations, LearningSimulationRegistersWorkbenchAndEmitsFunctionPackets
 
     sim.on_submit_render();
     EXPECT_GE(services.render().packet_count(view), 3u);
+    const auto curve_packets = std::count_if(services.render().packets().begin(),
+                                             services.render().packets().end(),
+                                             [view](const RenderPacket& packet) {
+                                                 return packet.view == view &&
+                                                        packet.topology == Topology::LineStrip &&
+                                                        packet.vertices.size() == 480u;
+                                             });
+    EXPECT_EQ(curve_packets, 2);
     EXPECT_GE(services.text().command_count(view), 2u);
     EXPECT_EQ(sim.metadata().surface_formula, "f(x) = sin(x), f'(x) = cos(x)");
 

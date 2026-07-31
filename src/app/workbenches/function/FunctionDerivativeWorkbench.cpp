@@ -2,14 +2,11 @@
 
 #include "app/workbenches/WorkbenchRegistry.hpp"
 
-#include <algorithm>
 #include <cmath>
 
 namespace ndde {
 
 namespace {
-
-constexpr u32 k_samples = 480u;
 
 [[nodiscard]] Vec4 function_color() noexcept { return Vec4{0.10f, 0.72f, 1.00f, 1.f}; }
 [[nodiscard]] Vec4 derivative_color() noexcept { return Vec4{1.00f, 0.44f, 0.18f, 1.f}; }
@@ -62,12 +59,20 @@ void FunctionDerivativeWorkbench::build(sim::WorkbenchBuildContext& build) {
         .name = "f(x)",
         .formula = "sin(x)",
         .color = function_color(),
+        .sampling = sim::CurveSamplingDescriptor{
+            .sample_count = 480u,
+            .z_offset = 0.01f
+        },
         .evaluate = [](f32 x) { return std::sin(x); }
     });
     (void)build.add_curve(sim, sim::CurveDescriptor{
         .name = "f'(x)",
         .formula = "cos(x)",
         .color = derivative_color(),
+        .sampling = sim::CurveSamplingDescriptor{
+            .sample_count = 480u,
+            .z_offset = 0.02f
+        },
         .evaluate = [](f32 x) { return std::cos(x); }
     });
 }
@@ -77,36 +82,10 @@ void FunctionDerivativeWorkbench::on_tick(const TickInfo& tick) {
 }
 
 void FunctionDerivativeWorkbench::on_submit_render(WorkbenchRenderContext& context) {
-    if (context.main_view == 0) return;
-
-    const CoordinateVisibleBounds2D bounds =
-        CoordinateOverlayService::visible_bounds(context.host.render(), context.main_view);
-    submit_function_curve(context, bounds, false);
-    submit_function_curve(context, bounds, true);
+    (void)context;
 }
 
 void FunctionDerivativeWorkbench::on_stop() {}
-
-void FunctionDerivativeWorkbench::submit_function_curve(WorkbenchRenderContext& context,
-                                                       CoordinateVisibleBounds2D bounds,
-                                                       bool derivative) const {
-    auto vertices = context.host.memory().frame().make_vector<Vertex>(k_samples);
-    const f32 span = std::max(bounds.width(), 0.001f);
-    const Vec4 color = derivative ? derivative_color() : function_color();
-    for (u32 sample = 0u; sample < k_samples; ++sample) {
-        const f32 t = static_cast<f32>(sample) / static_cast<f32>(k_samples - 1u);
-        const f32 x = bounds.left + t * span;
-        const f32 y = derivative ? std::cos(x) : std::sin(x);
-        vertices[sample] = Vertex{Vec3{x, y, derivative ? 0.02f : 0.01f}, color};
-    }
-
-    context.host.render().submit(context.main_view,
-                                 vertices,
-                                 Topology::LineStrip,
-                                 DrawMode::VertexColor,
-                                 Vec4{1.f, 1.f, 1.f, 1.f},
-                                 context.host.camera().view_mvp(context.main_view));
-}
 
 void register_function_derivative_workbench(WorkbenchRegistry& registry) {
     registry.add(WorkbenchMetadata{

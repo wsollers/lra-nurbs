@@ -3,7 +3,6 @@
 // Workbench for drawing f(x) = sin(x) and its derivative.
 
 #include "app/workbenches/Workbench.hpp"
-#include "engine/coordinates/CoordinateOverlayService.hpp"
 
 namespace ndde {
 
@@ -21,10 +20,6 @@ public:
 private:
     WorkbenchMetadata m_metadata;
     f32 m_time = 0.f;
-
-    void submit_function_curve(WorkbenchRenderContext& context,
-                               CoordinateVisibleBounds2D bounds,
-                               bool derivative) const;
 };
 
 } // namespace ndde

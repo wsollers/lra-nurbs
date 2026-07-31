@@ -14,10 +14,16 @@ struct SurfaceDescriptor {
     std::string name;
 };
 
+struct CurveSamplingDescriptor {
+    u32 sample_count = 480u;
+    f32 z_offset = 0.01f;
+};
+
 struct CurveDescriptor {
     std::string name;
     std::string formula;
     Vec4 color{1.f, 1.f, 1.f, 1.f};
+    CurveSamplingDescriptor sampling{};
     std::function<f32(f32)> evaluate;
 };
 

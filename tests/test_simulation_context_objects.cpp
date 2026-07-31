@@ -29,6 +29,10 @@ TEST(SimulationContextObjects, StoresMultipleCurvesAndOverlaysBehindTypedHandles
     const CurveHandle sin_curve = context.add_curve(CurveDescriptor{
         .name = "f(x)",
         .formula = "sin(x)",
+        .sampling = CurveSamplingDescriptor{
+            .sample_count = 256u,
+            .z_offset = 0.25f
+        },
         .evaluate = [](f32 x) { return std::sin(x); }
     });
     const CurveHandle cos_curve = context.add_curve(CurveDescriptor{
@@ -48,6 +52,8 @@ TEST(SimulationContextObjects, StoresMultipleCurvesAndOverlaysBehindTypedHandles
     EXPECT_EQ(context.overlay(overlay)->labels.y, "y");
     EXPECT_TRUE(context.overlay(overlay)->gradations.dynamic_steps);
     EXPECT_EQ(context.curve(sin_curve)->formula, "sin(x)");
+    EXPECT_EQ(context.curve(sin_curve)->sampling.sample_count, 256u);
+    EXPECT_FLOAT_EQ(context.curve(sin_curve)->sampling.z_offset, 0.25f);
     EXPECT_EQ(context.curve(cos_curve)->formula, "cos(x)");
 
     CurveHandle stale = sin_curve;

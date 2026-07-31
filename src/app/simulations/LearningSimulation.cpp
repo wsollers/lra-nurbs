@@ -2,6 +2,7 @@
 
 #include "engine/coordinates/CoordinateOverlayService.hpp"
 
+#include <algorithm>
 #include <memory_resource>
 #include <utility>
 
@@ -37,6 +38,34 @@ namespace {
         .show_polar_rings = overlay.show_polar_rings,
         .show_polar_spokes = overlay.show_polar_spokes
     };
+}
+
+void submit_declared_curves(SimulationHost& host,
+                            RenderViewId view,
+                            const sim::SimulationContext& sim_context,
+                            CoordinateVisibleBounds2D bounds,
+                            Mat4 mvp) {
+    u32 curve_index = 0u;
+    sim_context.curves().for_each([&](sim::CurveHandle, const sim::CurveDescriptor& curve) {
+        if (!curve.evaluate) return;
+
+        const u32 sample_count = std::max(curve.sampling.sample_count, 2u);
+        auto vertices = host.memory().frame().make_vector<Vertex>(sample_count);
+        const f32 span = std::max(bounds.width(), 0.001f);
+        const f32 z = curve.sampling.z_offset + 0.001f * static_cast<f32>(curve_index++);
+        for (u32 sample = 0u; sample < sample_count; ++sample) {
+            const f32 t = static_cast<f32>(sample) / static_cast<f32>(sample_count - 1u);
+            const f32 x = bounds.left + t * span;
+            vertices[sample] = Vertex{Vec3{x, curve.evaluate(x), z}, curve.color};
+        }
+
+        host.render().submit(view,
+                             vertices,
+                             Topology::LineStrip,
+                             DrawMode::VertexColor,
+                             Vec4{1.f, 1.f, 1.f, 1.f},
+                             mvp);
+    });
 }
 
 } // namespace
@@ -106,6 +135,8 @@ void LearningSimulation::on_submit_render() {
     if (!m_active_workbench || !m_host) return;
     auto context = render_context();
     const Mat4 mvp = m_host->camera().view_mvp(m_main_view);
+    const CoordinateVisibleBounds2D bounds =
+        CoordinateOverlayService::visible_bounds(m_host->render(), m_main_view);
     m_build_context.for_each_simulation([&](sim::SimulationContextHandle, const sim::SimulationContext& sim_context) {
         sim_context.overlays().for_each([&](sim::OverlayHandle, const sim::OverlayDescriptor& overlay) {
             if (overlay.kind.rfind("coordinate.", 0) != 0) return;
@@ -116,6 +147,7 @@ void LearningSimulation::on_submit_render() {
                                              to_engine_overlay(overlay),
                                              mvp);
         });
+        submit_declared_curves(*m_host, m_main_view, sim_context, bounds, mvp);
     });
     m_active_workbench->on_submit_render(context);
 }
