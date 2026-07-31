@@ -11,15 +11,19 @@ namespace {
 [[nodiscard]] Vec4 function_color() noexcept { return Vec4{0.10f, 0.72f, 1.00f, 1.f}; }
 [[nodiscard]] Vec4 derivative_color() noexcept { return Vec4{1.00f, 0.44f, 0.18f, 1.f}; }
 
-} // namespace
-
-FunctionDerivativeWorkbench::FunctionDerivativeWorkbench()
-    : m_metadata{
+[[nodiscard]] WorkbenchMetadata function_derivative_metadata() {
+    return WorkbenchMetadata{
         .id = "learning.function_derivative.sin",
         .title = "Function and Derivative: sin(x)",
         .summary = "Draws f(x) = sin(x) and f'(x) = cos(x) on a dynamic Cartesian canvas.",
         .thumbnail_path = "assets/thumbnails/workbenches/function-derivative-sin.png"
-    }
+    };
+}
+
+} // namespace
+
+FunctionDerivativeWorkbench::FunctionDerivativeWorkbench()
+    : m_metadata(function_derivative_metadata())
 {}
 
 void FunctionDerivativeWorkbench::on_start(WorkbenchRenderContext& context) {
@@ -88,12 +92,7 @@ void FunctionDerivativeWorkbench::on_submit_render(WorkbenchRenderContext& conte
 void FunctionDerivativeWorkbench::on_stop() {}
 
 void register_function_derivative_workbench(WorkbenchRegistry& registry) {
-    registry.add(WorkbenchMetadata{
-        .id = "learning.function_derivative.sin",
-        .title = "Function and Derivative: sin(x)",
-        .summary = "Draws f(x) = sin(x) and f'(x) = cos(x) on a dynamic Cartesian canvas.",
-        .thumbnail_path = "assets/thumbnails/workbenches/function-derivative-sin.png"
-    }, [](memory::MemoryService& memory) {
+    registry.add(function_derivative_metadata(), [](memory::MemoryService& memory) {
         return memory.simulation().make_unique_as<IWorkbench, FunctionDerivativeWorkbench>();
     });
 }

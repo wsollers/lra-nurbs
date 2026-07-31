@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <memory_resource>
+#include <string>
 #include <utility>
 
 namespace ndde {
@@ -66,6 +67,34 @@ void submit_declared_curves(SimulationHost& host,
                              Vec4{1.f, 1.f, 1.f, 1.f},
                              mvp);
     });
+}
+
+[[nodiscard]] std::string curve_formula_summary(const sim::WorkbenchBuildContext& build_context) {
+    std::string summary;
+    build_context.for_each_simulation([&](sim::SimulationContextHandle, const sim::SimulationContext& sim_context) {
+        sim_context.curves().for_each([&](sim::CurveHandle, const sim::CurveDescriptor& curve) {
+            if (curve.formula.empty()) return;
+            if (!summary.empty()) {
+                summary += ", ";
+            }
+            if (!curve.name.empty()) {
+                summary += curve.name;
+                summary += " = ";
+            }
+            summary += curve.formula;
+        });
+    });
+    return summary.empty() ? std::string("No declared curves") : summary;
+}
+
+[[nodiscard]] bool has_declared_curve(const sim::WorkbenchBuildContext& build_context) {
+    bool has_curve = false;
+    build_context.for_each_simulation([&](sim::SimulationContextHandle, const sim::SimulationContext& sim_context) {
+        sim_context.curves().for_each([&](sim::CurveHandle, const sim::CurveDescriptor&) {
+            has_curve = true;
+        });
+    });
+    return has_curve;
 }
 
 } // namespace
@@ -178,12 +207,12 @@ SimulationMetadata LearningSimulation::metadata() const {
     return SimulationMetadata{
         .name = std::string(name()),
         .surface_name = m_active_workbench ? m_active_workbench->metadata().title : "Learning workbench",
-        .surface_formula = "f(x) = sin(x), f'(x) = cos(x)",
+        .surface_formula = curve_formula_summary(m_build_context),
         .status = m_status,
         .sim_time = m_time,
         .sim_speed = f32(1),
         .particle_count = 0u,
-        .surface_has_analytic_derivatives = true
+        .surface_has_analytic_derivatives = has_declared_curve(m_build_context)
     };
 }
 
