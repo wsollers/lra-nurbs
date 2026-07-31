@@ -1,9 +1,45 @@
 #include "app/simulations/LearningSimulation.hpp"
 
+#include "engine/coordinates/CoordinateOverlayService.hpp"
+
 #include <memory_resource>
 #include <utility>
 
 namespace ndde {
+
+namespace {
+
+[[nodiscard]] CoordinateSpaceKind to_engine_space(sim::OverlayCoordinateSpace space) noexcept {
+    switch (space) {
+        case sim::OverlayCoordinateSpace::Polar2D:
+            return CoordinateSpaceKind::Polar2D;
+        case sim::OverlayCoordinateSpace::Cartesian2D:
+        default:
+            return CoordinateSpaceKind::Cartesian2D;
+    }
+}
+
+[[nodiscard]] CoordinateOverlayDescriptor to_engine_overlay(const sim::OverlayDescriptor& overlay) {
+    return CoordinateOverlayDescriptor{
+        .space = to_engine_space(overlay.coordinate_space),
+        .gradations = AxisGradationConfig{
+            .major_step = overlay.gradations.major_step,
+            .minor_step = overlay.gradations.minor_step,
+            .dynamic_steps = overlay.gradations.dynamic_steps
+        },
+        .labels = AxisLabelConfig{
+            .x = overlay.labels.x,
+            .y = overlay.labels.y,
+            .show = overlay.labels.show
+        },
+        .show_grid = overlay.show_grid,
+        .show_axes = overlay.show_axes,
+        .show_polar_rings = overlay.show_polar_rings,
+        .show_polar_spokes = overlay.show_polar_spokes
+    };
+}
+
+} // namespace
 
 LearningSimulation::LearningSimulation(memory::MemoryService* memory)
     : m_memory(memory)
@@ -69,6 +105,18 @@ void LearningSimulation::on_simulation_tick(const TickInfo& tick) {
 void LearningSimulation::on_submit_render() {
     if (!m_active_workbench || !m_host) return;
     auto context = render_context();
+    const Mat4 mvp = m_host->camera().view_mvp(m_main_view);
+    m_build_context.for_each_simulation([&](sim::SimulationContextHandle, const sim::SimulationContext& sim_context) {
+        sim_context.overlays().for_each([&](sim::OverlayHandle, const sim::OverlayDescriptor& overlay) {
+            if (overlay.kind.rfind("coordinate.", 0) != 0) return;
+            CoordinateOverlayService::submit(m_host->render(),
+                                             m_host->text(),
+                                             m_host->memory(),
+                                             m_main_view,
+                                             to_engine_overlay(overlay),
+                                             mvp);
+        });
+    });
     m_active_workbench->on_submit_render(context);
 }
 

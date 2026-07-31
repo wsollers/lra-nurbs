@@ -20,7 +20,6 @@ public:
 
 private:
     WorkbenchMetadata m_metadata;
-    CoordinateOverlayDescriptor m_overlay;
     f32 m_time = 0.f;
 
     void submit_function_curve(WorkbenchRenderContext& context,

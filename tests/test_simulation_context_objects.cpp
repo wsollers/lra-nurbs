@@ -14,9 +14,17 @@ TEST(SimulationContextObjects, StoresMultipleCurvesAndOverlaysBehindTypedHandles
     const OverlayHandle overlay = context.add_overlay(OverlayDescriptor{
         .name = "Cartesian",
         .kind = "coordinate.cartesian2d",
-        .x_label = "x",
-        .y_label = "y",
-        .dynamic_gradations = true
+        .coordinate_space = OverlayCoordinateSpace::Cartesian2D,
+        .gradations = OverlayGradationDescriptor{
+            .major_step = 1.f,
+            .minor_step = 0.25f,
+            .dynamic_steps = true
+        },
+        .labels = OverlayLabelDescriptor{
+            .x = "x",
+            .y = "y",
+            .show = true
+        }
     });
     const CurveHandle sin_curve = context.add_curve(CurveDescriptor{
         .name = "f(x)",
@@ -36,6 +44,9 @@ TEST(SimulationContextObjects, StoresMultipleCurvesAndOverlaysBehindTypedHandles
     ASSERT_NE(context.overlay(overlay), nullptr);
     ASSERT_NE(context.curve(sin_curve), nullptr);
     ASSERT_NE(context.curve(cos_curve), nullptr);
+    EXPECT_EQ(context.overlay(overlay)->labels.x, "x");
+    EXPECT_EQ(context.overlay(overlay)->labels.y, "y");
+    EXPECT_TRUE(context.overlay(overlay)->gradations.dynamic_steps);
     EXPECT_EQ(context.curve(sin_curve)->formula, "sin(x)");
     EXPECT_EQ(context.curve(cos_curve)->formula, "cos(x)");
 

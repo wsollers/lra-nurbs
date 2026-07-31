@@ -31,12 +31,33 @@ struct DeformationDescriptor {
     SurfaceHandle target;
 };
 
+enum class OverlayCoordinateSpace : u8 {
+    Cartesian2D,
+    Polar2D
+};
+
+struct OverlayGradationDescriptor {
+    f32 major_step = 1.f;
+    f32 minor_step = 0.2f;
+    bool dynamic_steps = true;
+};
+
+struct OverlayLabelDescriptor {
+    std::string x = "x";
+    std::string y = "y";
+    bool show = true;
+};
+
 struct OverlayDescriptor {
     std::string name;
     std::string kind;
-    std::string x_label;
-    std::string y_label;
-    bool dynamic_gradations = true;
+    OverlayCoordinateSpace coordinate_space = OverlayCoordinateSpace::Cartesian2D;
+    OverlayGradationDescriptor gradations{};
+    OverlayLabelDescriptor labels{};
+    bool show_grid = true;
+    bool show_axes = true;
+    bool show_polar_rings = false;
+    bool show_polar_spokes = false;
 };
 
 struct FieldDescriptor {

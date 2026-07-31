@@ -80,6 +80,15 @@ public:
         return {};
     }
 
+    template <class Fn>
+    void for_each_simulation(Fn&& fn) const {
+        for (const ContextSlot& slot : m_contexts) {
+            if (slot.active) {
+                fn(slot.handle, slot.context);
+            }
+        }
+    }
+
     [[nodiscard]] std::size_t simulation_count() const noexcept { return m_contexts.size(); }
 
 private:

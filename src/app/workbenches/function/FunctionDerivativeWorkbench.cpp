@@ -23,23 +23,6 @@ FunctionDerivativeWorkbench::FunctionDerivativeWorkbench()
         .summary = "Draws f(x) = sin(x) and f'(x) = cos(x) on a dynamic Cartesian canvas.",
         .thumbnail_path = "assets/thumbnails/workbenches/function-derivative-sin.png"
     }
-    , m_overlay{
-        .space = CoordinateSpaceKind::Cartesian2D,
-        .gradations = AxisGradationConfig{
-            .major_step = 1.f,
-            .minor_step = 0.2f,
-            .dynamic_steps = true
-        },
-        .labels = AxisLabelConfig{
-            .x = "x",
-            .y = "y",
-            .show = true
-        },
-        .show_grid = true,
-        .show_axes = true,
-        .show_polar_rings = false,
-        .show_polar_spokes = false
-    }
 {}
 
 void FunctionDerivativeWorkbench::on_start(WorkbenchRenderContext& context) {
@@ -61,9 +44,19 @@ void FunctionDerivativeWorkbench::build(sim::WorkbenchBuildContext& build) {
     (void)build.add_overlay(sim, sim::OverlayDescriptor{
         .name = "Cartesian function canvas",
         .kind = "coordinate.cartesian2d",
-        .x_label = "x",
-        .y_label = "y",
-        .dynamic_gradations = true
+        .coordinate_space = sim::OverlayCoordinateSpace::Cartesian2D,
+        .gradations = sim::OverlayGradationDescriptor{
+            .major_step = 1.f,
+            .minor_step = 0.2f,
+            .dynamic_steps = true
+        },
+        .labels = sim::OverlayLabelDescriptor{
+            .x = "x",
+            .y = "y",
+            .show = true
+        },
+        .show_grid = true,
+        .show_axes = true
     });
     (void)build.add_curve(sim, sim::CurveDescriptor{
         .name = "f(x)",
@@ -85,14 +78,6 @@ void FunctionDerivativeWorkbench::on_tick(const TickInfo& tick) {
 
 void FunctionDerivativeWorkbench::on_submit_render(WorkbenchRenderContext& context) {
     if (context.main_view == 0) return;
-
-    const Mat4 mvp = context.host.camera().view_mvp(context.main_view);
-    CoordinateOverlayService::submit(context.host.render(),
-                                     context.host.text(),
-                                     context.host.memory(),
-                                     context.main_view,
-                                     m_overlay,
-                                     mvp);
 
     const CoordinateVisibleBounds2D bounds =
         CoordinateOverlayService::visible_bounds(context.host.render(), context.main_view);

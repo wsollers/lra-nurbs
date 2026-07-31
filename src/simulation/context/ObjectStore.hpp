@@ -49,6 +49,15 @@ public:
         return it->second;
     }
 
+    template <class Fn>
+    void for_each(Fn&& fn) const {
+        for (const Slot& slot : m_slots) {
+            if (slot.active) {
+                fn(slot.handle, slot.object);
+            }
+        }
+    }
+
     [[nodiscard]] std::size_t size() const noexcept { return m_slots.size(); }
     [[nodiscard]] bool empty() const noexcept { return m_slots.empty(); }
 
