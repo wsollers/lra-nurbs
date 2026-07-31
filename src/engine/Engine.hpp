@@ -80,8 +80,6 @@ private:
     StartupMode              m_startup_mode = StartupMode::Choose;
     int                      m_startup_choice = 0;
     bool                     m_startup_popup_opened = false;
-    RenderViewId             m_learning_view_id = 0;
-    RenderViewHandle         m_learning_view;
 
     // Per-frame state
     double     m_last_frame_time = 0.0;
@@ -110,15 +108,12 @@ private:
 
     void run_frame();
     void run_startup_selection_frame();
-    void run_learning_frame();
     void handle_resize();
     void apply_pending_simulation_switch();
     void enter_examples_mode();
     void enter_learning_mode();
     void init_auxiliary_window(const std::string& title);
     void position_learning_windows();
-    void register_learning_view();
-    void submit_learning_grid();
     void register_global_panels();
     void draw_global_status_panel();
     void draw_debug_coordinates_panel();

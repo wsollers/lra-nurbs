@@ -47,6 +47,9 @@ add_executable(ndde_tests
     ${CMAKE_SOURCE_DIR}/src/app/SimulationTaylorExpansionLab.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SimulationWavePredatorPrey.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SurfaceMeshCache.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/LearningSimulation.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/learning/FunctionDerivativeWorkbench.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/learning/WorkbenchRegistry.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/fields/IField.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/scenario/ScenarioBuilder.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/AppConfig.cpp
@@ -57,6 +60,7 @@ add_executable(ndde_tests
     ${CMAKE_SOURCE_DIR}/src/engine/logging/LoggerService.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/metadata/SimMetadataService.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/metricservice/MetricsService.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/coordinates/CoordinateOverlayService.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/resources/ResourceManagerService.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/text/TextOverlayService.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/threading/ThreadManagementService.cpp

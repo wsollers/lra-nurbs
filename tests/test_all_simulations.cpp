@@ -9,6 +9,7 @@
 #include "app/SimulationTaylorExpansionLab.hpp"
 #include "app/SimulationWavePredatorPrey.hpp"
 #include "app/SceneFactories.hpp"
+#include "app/simulations/LearningSimulation.hpp"
 #include "engine/SimulationHost.hpp"
 
 #include <gtest/gtest.h>
@@ -223,6 +224,32 @@ TEST(AllSimulations, TaylorExpansionLabRegistersPanel) {
     EXPECT_EQ(services.panels().active_count(), 0u);
 }
 
+TEST(AllSimulations, LearningSimulationRegistersWorkbenchAndEmitsFunctionPackets) {
+    EngineServices services;
+    SimulationHost host = services.simulation_host();
+    LearningSimulation sim(&services.memory());
+
+    sim.on_register(host);
+    EXPECT_EQ(services.render().active_view_count(), 1u);
+    const RenderViewId view = services.render().first_active_main_view();
+    ASSERT_NE(view, RenderViewId(0));
+
+    sim.on_start();
+    services.render().clear_packets();
+    services.text().clear();
+
+    sim.on_simulation_tick(host.clock().next(1.f / 60.f));
+    EXPECT_EQ(services.render().packet_count(view), 0u);
+
+    sim.on_submit_render();
+    EXPECT_GE(services.render().packet_count(view), 3u);
+    EXPECT_GE(services.text().command_count(view), 2u);
+    EXPECT_EQ(sim.metadata().surface_formula, "f(x) = sin(x), f'(x) = cos(x)");
+
+    sim.on_stop();
+    EXPECT_EQ(services.render().active_view_count(), 0u);
+}
+
 TEST(AllSimulations, DefaultRegistryContainsActiveLearningLabs) {
     EngineServices services;
     SimulationRegistry registry(services.memory());
@@ -233,6 +260,15 @@ TEST(AllSimulations, DefaultRegistryContainsActiveLearningLabs) {
     EXPECT_EQ(registry.get(1)->name(), "Smoke Test - Wave Predator-Prey");
     EXPECT_EQ(registry.get(2)->name(), "Integration & Derivative Lab");
     EXPECT_EQ(registry.get(3)->name(), "Taylor Expansion Lab");
+}
+
+TEST(AllSimulations, LearningRegistryContainsWorkbenchRuntime) {
+    EngineServices services;
+    SimulationRegistry registry(services.memory());
+    register_learning_simulations(registry);
+
+    ASSERT_EQ(registry.size(), 1u);
+    EXPECT_EQ(registry.get(0)->name(), "Learning Workbench");
 }
 
 TEST(AllSimulations, WavePredatorPreyDoubleClickSurfacePickAddsRipple) {

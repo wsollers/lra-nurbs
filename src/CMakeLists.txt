@@ -99,6 +99,7 @@ add_library(ndde_engine STATIC
     engine/logging/LoggerService.cpp
     engine/metadata/SimMetadataService.cpp
     engine/metricservice/MetricsService.cpp
+    engine/coordinates/CoordinateOverlayService.cpp
     engine/resources/ResourceManagerService.cpp
     engine/text/TextOverlayService.cpp
     engine/threading/ThreadManagementService.cpp
@@ -134,6 +135,9 @@ add_executable(nurbs_dde
     app/SimulationTaylorExpansionLab.cpp
     app/SimulationWavePredatorPrey.cpp
     app/SurfaceMeshCache.cpp
+    app/simulations/LearningSimulation.cpp
+    app/simulations/learning/FunctionDerivativeWorkbench.cpp
+    app/simulations/learning/WorkbenchRegistry.cpp
     simulation/fields/IField.cpp
     simulation/scenario/ScenarioBuilder.cpp
 )

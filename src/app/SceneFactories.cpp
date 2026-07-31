@@ -6,6 +6,7 @@
 #include "app/SimulationLabPicker.hpp"
 #include "app/SimulationTaylorExpansionLab.hpp"
 #include "app/SimulationWavePredatorPrey.hpp"
+#include "app/simulations/LearningSimulation.hpp"
 
 #include <utility>
 
@@ -17,6 +18,10 @@ void register_default_simulations(SimulationRegistry& registry,
     registry.add_runtime<SimulationWavePredatorPrey>("Smoke Test - Wave Predator-Prey");
     registry.add_runtime<SimulationIntegrationDerivativeLab>("Integration & Derivative Lab");
     registry.add_runtime<SimulationTaylorExpansionLab>("Taylor Expansion Lab");
+}
+
+void register_learning_simulations(SimulationRegistry& registry) {
+    registry.add_runtime<LearningSimulation>("Learning Workbench");
 }
 
 } // namespace ndde
