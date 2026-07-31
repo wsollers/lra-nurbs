@@ -3,9 +3,8 @@
 // GaussianRipple: Gaussian height-field base + decaying radial wave.
 // Inherits IDeformableSurface -- is_time_varying() returns true.
 //
-// GaussianSurface.hpp was archived to src/old/. The eval_static() function
-// and domain constants it provided have been inlined here directly.
-// Nothing outside this file needs to include GaussianSurface.hpp.
+// The Gaussian height evaluator and domain constants are kept local so this
+// surface has no app simulation dependency.
 
 #include "math/Surfaces.hpp"
 #include "math/numeric/ops.hpp"
@@ -15,7 +14,7 @@ namespace ndde {
 
 class GaussianRipple final : public ndde::math::IDeformableSurface {
 public:
-    // Domain matches the old GaussianSurface constants
+    // Domain used by the Gaussian height field.
     static constexpr f32 XMIN = f32(-6);
     static constexpr f32 XMAX = f32( 6);
     static constexpr f32 YMIN = f32(-6);

@@ -34,10 +34,6 @@ add_executable(ndde_tests
     test_surface_metadata.cpp
     test_text_overlay_service.cpp
     test_thread_management_service.cpp
-    # Differential / DDE tests reference old simulations — archived, excluded.
-    # Re-enable when those sims are ported to the new simulation/ layer.
-    # test_differential_system.cpp
-    # test_simulation_surface_gaussian.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabAnalyticsPackets.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabRenderPackets.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/integration/IntegrationWorkbenchState.cpp

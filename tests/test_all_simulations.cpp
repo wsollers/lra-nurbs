@@ -1,7 +1,5 @@
 // tests/test_all_simulations.cpp
 // Tests for the active simulation set.
-// Old simulations (Analysis, MultiWell, Gaussian, Differential*) have been
-// archived to src/old/ -- only SimulationWavePredatorPrey is active.
 
 #include "app/Curve2DOverlay.hpp"
 #include "app/SimulationLabPicker.hpp"

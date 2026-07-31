@@ -1,7 +1,5 @@
 // simulation/curves/AnimatedCurve.cpp
 // AnimatedCurve implementation.
-// Previously lived in app/GaussianSurface.cpp (now archived to src/old/).
-// Extracted here so it compiles independently of GaussianSurface.
 
 #include "simulation/curves/AnimatedCurve.hpp"
 #include "simulation/curves/FrenetFrame.hpp"

@@ -122,7 +122,6 @@ target_link_libraries(ndde_engine PUBLIC
 )
 
 # ── nurbs_dde executable ──────────────────────────────────────────────────────
-# Old simulations have been moved to src/old/ and are not compiled.
 add_executable(nurbs_dde
     app/main.cpp
     app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabAnalyticsPackets.cpp
