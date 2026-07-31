@@ -26,6 +26,8 @@ public:
     void destroy();
 
     void poll_events();
+    void set_title(const std::string& title);
+    void restore_and_move_resize(int x, int y, u32 width, u32 height);
     [[nodiscard]] bool should_close() const noexcept;
 
     /// Returns true once per resize event, then resets atomically.

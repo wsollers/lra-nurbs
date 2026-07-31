@@ -3,6 +3,8 @@
 #include <volk.h>
 
 #include "engine/Engine.hpp"
+#include "math/Axes.hpp"
+#include "numeric/Constants.hpp"
 #include "app/SceneFactories.hpp"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -10,6 +12,7 @@
 #include <format>
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cctype>
 #include <filesystem>
 #include <iomanip>
@@ -50,6 +53,36 @@ bool primary_view_ui_blocked(const ImGuiIO& io) noexcept {
     // is actively being edited/dragged.
     return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)
         || ImGui::IsAnyItemActive();
+}
+
+[[nodiscard]] f32 nice_grid_step(f32 visible_span) noexcept {
+    const f32 safe_span = std::max(visible_span, 0.001f);
+    const f32 raw_step = safe_span / 20.f;
+    const f32 magnitude = std::pow(10.f, std::floor(std::log10(raw_step)));
+    const f32 scaled = raw_step / magnitude;
+
+    if (scaled <= 1.f) return magnitude;
+    if (scaled <= 2.f) return 2.f * magnitude;
+    if (scaled <= 5.f) return 5.f * magnitude;
+    return 10.f * magnitude;
+}
+
+[[nodiscard]] f32 min_distance_to_rect_from_origin(f32 vl, f32 vr, f32 vb, f32 vt) noexcept {
+    f32 dx = 0.f;
+    if (vr < 0.f) {
+        dx = -vr;
+    } else if (vl > 0.f) {
+        dx = vl;
+    }
+
+    f32 dy = 0.f;
+    if (vt < 0.f) {
+        dy = -vt;
+    } else if (vb > 0.f) {
+        dy = vb;
+    }
+
+    return std::sqrt(dx * dx + dy * dy);
 }
 
 void draw_wrapped_log_text(std::string_view text, ImVec4 color) {
@@ -131,7 +164,7 @@ Engine::~Engine() {
     uninstall_global_hotkeys();
 
     // ── Telemetry: close any active run before GPU teardown ─────────────────
-    if (m_telemetry.enabled()) {
+    if (m_startup_mode == StartupMode::Examples && m_telemetry.enabled()) {
         fire_sim_stopped(m_active_sim,
                          active_runtime().snapshot().sim_time,
                          m_telemetry_tick_count);
@@ -176,58 +209,6 @@ void Engine::start(const std::filesystem::path& executable_path,
     m_services.memory().init_frame_gpu_arena(m_vk.device(), m_vk.physical_device(),
                                              m_config.simulation.arena_size_mb);
 
-    // Second window for the 2D contour view.
-    // Place it to the right of the primary window. glfwGetMonitors lets us
-    // find the second monitor; fall back to primary + offset if only one.
-    {
-        int   mon_count = 0;
-        GLFWmonitor** monitors = glfwGetMonitors(&mon_count);
-        int x = 0, y = 0;
-        if (mon_count >= 2) {
-            // Put second window on second monitor
-            int mx=0, my=0;
-            glfwGetMonitorPos(monitors[1], &mx, &my);
-            const GLFWvidmode* vm = glfwGetVideoMode(monitors[1]);
-            x = mx; y = my;
-            m_second_win.init(m_vk, x, y,
-                static_cast<u32>(vm->width),
-                static_cast<u32>(vm->height),
-                "Contour 2D", m_shader_dir.string(), m_config.render.vsync);
-        } else {
-            // Single monitor: place second window at right half
-            int mx=0, my=0;
-            glfwGetMonitorPos(monitors[0], &mx, &my);
-            const GLFWvidmode* vm = glfwGetVideoMode(monitors[0]);
-            const u32 hw = static_cast<u32>(vm->width / 2);
-            m_second_win.init(m_vk, mx + static_cast<int>(hw), my,
-                hw, static_cast<u32>(vm->height),
-                "Contour 2D", m_shader_dir.string(), m_config.render.vsync);
-        }
-    }
-
-    // Also maximise the primary window to fill its half / first monitor
-    glfwMaximizeWindow(m_glfw.window());
-
-    register_global_panels();
-    register_default_simulations(m_simulations, [this](std::size_t index) {
-        m_pending_sim = index;
-    });
-
-    m_active_sim = 0;
-    active_runtime().instantiate(m_simulation_host);
-    active_runtime().start();
-    start_active_simulation_thread();
-
-    // ── Telemetry init ──────────────────────────────────────────────────────
-    m_telemetry.set_enabled(m_config.telemetry.enabled);
-    if (m_config.telemetry.enabled) {
-        m_telemetry.init(
-            m_config.telemetry.buffer_records,
-            m_telemetry_dir);
-        fire_app_started(resolved_config.string());
-        fire_sim_started(m_active_sim);
-    }
-
     // ── Engine event bus + logger init ─────────────────────────────────────
     m_services.events().init();
     m_app_started_subscription =
@@ -252,7 +233,7 @@ void Engine::start(const std::filesystem::path& executable_path,
     (void)m_services.threads().enqueue_logger_task([this] {
         (void)m_services.logger().write(LogSeverity::Info, LogCategory::Engine, {}, "Engine ready");
     });
-    std::cout << "[Engine] Ready.\n";
+    std::cout << "[Engine] Ready for startup mode selection.\n";
 }
 
 void Engine::install_global_hotkeys() {
@@ -279,6 +260,7 @@ void Engine::uninstall_global_hotkeys() noexcept {
 }
 
 void Engine::switch_simulation(std::size_t index) {
+    if (m_startup_mode != StartupMode::Examples) return;
     if (index >= m_simulations.size() || index == m_active_sim) return;
     stop_active_simulation_thread();
     vkDeviceWaitIdle(m_vk.device());
@@ -326,6 +308,15 @@ void Engine::run() {
 }
 
 void Engine::run_frame() {
+    if (m_startup_mode == StartupMode::Choose) {
+        run_startup_selection_frame();
+        return;
+    }
+    if (m_startup_mode == StartupMode::Learning) {
+        run_learning_frame();
+        return;
+    }
+
     // ── Wall-clock timing ─────────────────────────────────────────────────────
     const double now      = glfwGetTime();
     const double delta_s  = now - m_last_frame_time;
@@ -473,6 +464,308 @@ void Engine::run_frame() {
 
     apply_pending_simulation_switch();
     m_services.metrics().end_frame();
+}
+
+void Engine::run_startup_selection_frame() {
+    m_renderer.imgui_new_frame();
+
+    if (!m_startup_popup_opened) {
+        ImGui::OpenPopup("Startup Mode");
+        m_startup_popup_opened = true;
+    }
+
+    const ImGuiIO& io = ImGui::GetIO();
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f),
+                            ImGuiCond_Always,
+                            ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(280.f, 150.f), ImGuiCond_Always);
+    if (ImGui::BeginPopupModal("Startup Mode",
+                               nullptr,
+                               ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove)) {
+        ImGui::RadioButton("Learning", &m_startup_choice, 0);
+        ImGui::RadioButton("Examples", &m_startup_choice, 1);
+        ImGui::Spacing();
+        if (ImGui::Button("OK", ImVec2(96.f, 0.f))) {
+            if (m_startup_choice == 0) {
+                enter_learning_mode();
+            } else {
+                enter_examples_mode();
+            }
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+
+    m_renderer.imgui_build_draw_data();
+
+    bool primary_ok = true;
+    (void)run_render_frame_task([this, &primary_ok] {
+        primary_ok = m_renderer.begin_frame(m_swapchain);
+        if (!primary_ok) return;
+        m_renderer.imgui_record_draw_data();
+        primary_ok = m_renderer.end_frame(m_swapchain);
+    });
+    if (!primary_ok) handle_resize();
+}
+
+void Engine::run_learning_frame() {
+    const double now = glfwGetTime();
+    const double delta_s = now - m_last_frame_time;
+    m_last_frame_time = now;
+    const f32 frame_ms = static_cast<f32>(delta_s * 1000.0);
+    const f32 fps = (frame_ms > 0.f) ? 1000.f / frame_ms : 0.f;
+
+    m_services.metrics().begin_frame(m_services.clock().current().tick_index,
+                                     static_cast<f64>(now));
+    m_services.metrics().record_frame_time(frame_ms);
+    m_services.render().clear_packets();
+    m_services.text().clear();
+    m_services.memory().begin_frame();
+    m_debug_stats = DebugStats{
+        .arena_bytes_used = 0,
+        .arena_bytes_total = m_services.memory().frame_gpu_bytes_total(),
+        .arena_utilisation = 0.f,
+        .arena_vertex_count = 0,
+        .draw_calls = m_renderer.draw_call_count(),
+        .swapchain_w = m_swapchain.extent().width,
+        .swapchain_h = m_swapchain.extent().height,
+        .frame_ms = frame_ms,
+        .fps = fps
+    };
+
+    m_renderer.imgui_new_frame();
+    update_render_view_input();
+    submit_learning_grid();
+    m_renderer.imgui_build_draw_data();
+
+    bool primary_ok = true;
+    bool second_present_ok = true;
+    (void)run_render_frame_task([this, &primary_ok, &second_present_ok] {
+        primary_ok = m_renderer.begin_frame(m_swapchain);
+        if (!primary_ok) return;
+        const bool second_ok = m_second_win.valid() && m_second_win.begin_frame();
+        flush_render_service();
+        m_services.render().clear_packets();
+        m_renderer.imgui_record_draw_data();
+        primary_ok = m_renderer.end_frame(m_swapchain);
+        if (second_ok) {
+            second_present_ok = m_second_win.end_frame();
+        }
+    });
+    if (!primary_ok) handle_resize();
+    if (!second_present_ok) { /* resize handled internally */ }
+    m_debug_stats.arena_bytes_used = m_services.memory().frame_gpu_bytes_used();
+    m_debug_stats.arena_utilisation = m_services.memory().frame_gpu_utilisation();
+    m_debug_stats.arena_vertex_count =
+        m_services.memory().frame_gpu_bytes_used() / static_cast<u64>(sizeof(Vertex));
+    m_services.metrics().end_frame();
+}
+
+void Engine::enter_examples_mode() {
+    if (m_startup_mode != StartupMode::Choose) return;
+
+    m_startup_mode = StartupMode::Examples;
+    init_auxiliary_window("Contour 2D");
+    glfwMaximizeWindow(m_glfw.window());
+
+    register_global_panels();
+    register_default_simulations(m_simulations, [this](std::size_t index) {
+        m_pending_sim = index;
+    });
+
+    m_active_sim = 0;
+    active_runtime().instantiate(m_simulation_host);
+    active_runtime().start();
+    start_active_simulation_thread();
+
+    m_telemetry.set_enabled(m_config.telemetry.enabled);
+    if (m_config.telemetry.enabled) {
+        m_telemetry.init(
+            m_config.telemetry.buffer_records,
+            m_telemetry_dir);
+        fire_app_started(std::string{});
+        fire_sim_started(m_active_sim);
+    }
+
+    std::cout << "[Engine] Startup mode: Examples\n";
+}
+
+void Engine::enter_learning_mode() {
+    if (m_startup_mode != StartupMode::Choose) return;
+
+    m_startup_mode = StartupMode::Learning;
+    m_glfw.set_title("Simulation");
+    position_learning_windows();
+    init_auxiliary_window("Diagnostics");
+    register_learning_view();
+    m_telemetry.set_enabled(false);
+    std::cout << "[Engine] Startup mode: Learning\n";
+}
+
+void Engine::init_auxiliary_window(const std::string& title) {
+    int mon_count = 0;
+    GLFWmonitor** monitors = glfwGetMonitors(&mon_count);
+    if (!monitors || mon_count <= 0) {
+        throw std::runtime_error("[Engine] No GLFW monitor available for auxiliary window");
+    }
+
+    int x = 0;
+    int y = 0;
+    u32 width = 960;
+    u32 height = 540;
+    if (mon_count >= 2) {
+        int mx = 0;
+        int my = 0;
+        glfwGetMonitorPos(monitors[1], &mx, &my);
+        const GLFWvidmode* vm = glfwGetVideoMode(monitors[1]);
+        x = mx;
+        y = my;
+        width = static_cast<u32>(vm->width);
+        height = static_cast<u32>(vm->height);
+    } else {
+        int mx = 0;
+        int my = 0;
+        glfwGetMonitorPos(monitors[0], &mx, &my);
+        const GLFWvidmode* vm = glfwGetVideoMode(monitors[0]);
+        const u32 half_width = static_cast<u32>(vm->width / 2);
+        x = mx + static_cast<int>(half_width);
+        y = my;
+        width = half_width;
+        height = static_cast<u32>(vm->height);
+    }
+
+    m_second_win.init(m_vk, x, y, width, height, title, m_shader_dir.string(), m_config.render.vsync);
+}
+
+void Engine::position_learning_windows() {
+    int mon_count = 0;
+    GLFWmonitor** monitors = glfwGetMonitors(&mon_count);
+    if (!monitors || mon_count <= 0) {
+        return;
+    }
+
+    int mx = 0;
+    int my = 0;
+    glfwGetMonitorPos(monitors[0], &mx, &my);
+    const GLFWvidmode* vm = glfwGetVideoMode(monitors[0]);
+    const u32 half_width = static_cast<u32>(vm->width / 2);
+    m_glfw.restore_and_move_resize(mx, my, half_width, static_cast<u32>(vm->height));
+    handle_resize();
+}
+
+void Engine::register_learning_view() {
+    const Vec2 viewport{
+        static_cast<f32>(m_glfw.width()),
+        static_cast<f32>(m_glfw.height())
+    };
+    RenderViewDescriptor descriptor{
+        .title = "Learning XY",
+        .kind = RenderViewKind::Main,
+        .projection = CameraProjection::Orthographic,
+        .camera_profile = CameraViewProfile::Orthographic2D,
+        .viewport_aspect = viewport.y > 0.f ? viewport.x / viewport.y : 1.f,
+        .viewport_size = viewport,
+        .camera = CameraState{.target = Vec3{0.f, 0.f, 0.f}, .yaw = 0.f, .pitch = 0.f, .zoom = 1.f},
+        .overlays = ViewOverlayState{.show_axes = true, .show_grid = true}
+    };
+    m_learning_view = m_services.render().register_view(std::move(descriptor), &m_learning_view_id);
+    m_services.render().set_view_domain(m_learning_view_id, RenderViewDomain{
+        .u_min = -10.f,
+        .u_max = 10.f,
+        .v_min = -10.f,
+        .v_max = 10.f,
+        .z_min = -1.f,
+        .z_max = 1.f
+    });
+}
+
+void Engine::submit_learning_grid() {
+    if (m_learning_view_id == 0) return;
+
+    const RenderViewDomain domain = m_services.render().view_domain(m_learning_view_id);
+    const RenderViewDescriptor* descriptor = m_services.render().descriptor(m_learning_view_id);
+    const CameraState camera = descriptor ? descriptor->camera : CameraState{};
+    const f32 zoom = std::max(camera.zoom, 0.05f);
+    const f32 half_u = 0.54f * (domain.u_max - domain.u_min) / zoom;
+    const f32 half_v = 0.54f * (domain.v_max - domain.v_min) / zoom;
+    const f32 vl = camera.target.x - half_u;
+    const f32 vr = camera.target.x + half_u;
+    const f32 vb = camera.target.y - half_v;
+    const f32 vt = camera.target.y + half_v;
+
+    const f32 minor_step = nice_grid_step(std::max(vr - vl, vt - vb));
+    const f32 major_step = minor_step * 5.f;
+    const f32 min_radius = min_distance_to_rect_from_origin(vl, vr, vb, vt);
+    const f32 max_radius = std::sqrt(
+        std::max(vl * vl, vr * vr) +
+        std::max(vb * vb, vt * vt));
+    const u32 grid_count = math::grid_vp_max_vertices(vl, vr, vb, vt, minor_step);
+    auto grid_vertices = m_services.memory().frame().make_vector<Vertex>(grid_count);
+    const u32 written = math::build_grid_viewport(grid_vertices, vl, vr, vb, vt, minor_step, major_step);
+    grid_vertices.resize(written);
+
+    constexpr u32 circle_segments = 144u;
+    const u32 first_ring = std::max(1u, static_cast<u32>(std::floor(min_radius / major_step)));
+    const u32 last_ring = static_cast<u32>(std::ceil(max_radius / major_step));
+    const u32 ring_count = last_ring >= first_ring ? last_ring - first_ring + 1u : 0u;
+    auto polar_vertices = m_services.memory().frame().make_vector<Vertex>(
+        ring_count * circle_segments * 2u + 24u * 2u);
+    u32 polar_index = 0;
+    const Vec4 polar_minor{0.16f, 0.22f, 0.32f, 1.f};
+    const Vec4 polar_major{0.28f, 0.36f, 0.52f, 1.f};
+    const Vec4 polar_spoke{0.22f, 0.30f, 0.42f, 1.f};
+
+    const auto push_polar = [&](Vec3 a, Vec3 b, Vec4 color) {
+        polar_vertices[polar_index++] = Vertex{a, color};
+        polar_vertices[polar_index++] = Vertex{b, color};
+    };
+
+    for (u32 ring = first_ring; ring <= last_ring; ++ring) {
+        const f32 radius = major_step * static_cast<f32>(ring);
+        const Vec4 color = ring % 5u == 0u ? polar_major : polar_minor;
+        for (u32 segment = 0u; segment < circle_segments; ++segment) {
+            const f32 a0 = (static_cast<f32>(segment) / static_cast<f32>(circle_segments)) * numeric::two_pi<f32>;
+            const f32 a1 = (static_cast<f32>(segment + 1u) / static_cast<f32>(circle_segments)) * numeric::two_pi<f32>;
+            push_polar(Vec3{std::cos(a0) * radius, std::sin(a0) * radius, 0.f},
+                       Vec3{std::cos(a1) * radius, std::sin(a1) * radius, 0.f},
+                       color);
+        }
+    }
+
+    constexpr u32 spoke_count = 24u;
+    for (u32 spoke = 0u; spoke < spoke_count; ++spoke) {
+        const f32 angle = (static_cast<f32>(spoke) / static_cast<f32>(spoke_count)) * numeric::two_pi<f32>;
+        push_polar(Vec3{0.f, 0.f, 0.f},
+                   Vec3{std::cos(angle) * max_radius, std::sin(angle) * max_radius, 0.f},
+                   polar_spoke);
+    }
+    polar_vertices.resize(polar_index);
+
+    auto axis_vertices = m_services.memory().frame().make_vector<Vertex>(4u);
+    axis_vertices[0] = Vertex{Vec3{vl, 0.f, 0.f}, math::colors::X_AXIS};
+    axis_vertices[1] = Vertex{Vec3{vr, 0.f, 0.f}, math::colors::X_AXIS};
+    axis_vertices[2] = Vertex{Vec3{0.f, vb, 0.f}, math::colors::Y_AXIS};
+    axis_vertices[3] = Vertex{Vec3{0.f, vt, 0.f}, math::colors::Y_AXIS};
+
+    const Mat4 mvp = m_services.camera().view_mvp(m_learning_view_id);
+    m_services.render().submit(m_learning_view_id,
+                               grid_vertices,
+                               Topology::LineList,
+                               DrawMode::VertexColor,
+                               Vec4{1.f, 1.f, 1.f, 1.f},
+                               mvp);
+    m_services.render().submit(m_learning_view_id,
+                               polar_vertices,
+                               Topology::LineList,
+                               DrawMode::VertexColor,
+                               Vec4{1.f, 1.f, 1.f, 1.f},
+                               mvp);
+    m_services.render().submit(m_learning_view_id,
+                               axis_vertices,
+                               Topology::LineList,
+                               DrawMode::VertexColor,
+                               Vec4{1.f, 1.f, 1.f, 1.f},
+                               mvp);
 }
 
 void Engine::register_global_panels() {
@@ -1058,6 +1351,10 @@ void Engine::update_render_view_input() {
 }
 
 void Engine::request_capture(bool pause_first) {
+    if (m_startup_mode != StartupMode::Examples) {
+        return;
+    }
+
     if (pause_first)
         active_runtime().pause();
 

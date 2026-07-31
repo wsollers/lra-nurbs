@@ -56,6 +56,25 @@ void GlfwContext::destroy() {
 
 void GlfwContext::poll_events() { glfwPollEvents(); }
 
+void GlfwContext::set_title(const std::string& title) {
+    if (!m_window) return;
+    glfwSetWindowTitle(m_window, title.c_str());
+}
+
+void GlfwContext::restore_and_move_resize(int x, int y, u32 width, u32 height) {
+    if (!m_window) return;
+    glfwRestoreWindow(m_window);
+    glfwSetWindowPos(m_window, x, y);
+    glfwSetWindowSize(m_window, static_cast<int>(width), static_cast<int>(height));
+
+    int fb_w = 0;
+    int fb_h = 0;
+    glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
+    m_width.store(static_cast<u32>(fb_w), std::memory_order_relaxed);
+    m_height.store(static_cast<u32>(fb_h), std::memory_order_relaxed);
+    m_resized.store(true, std::memory_order_release);
+}
+
 bool GlfwContext::should_close() const noexcept {
     return glfwWindowShouldClose(m_window) != 0;
 }
