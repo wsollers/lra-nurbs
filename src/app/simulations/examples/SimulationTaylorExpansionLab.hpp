@@ -1,5 +1,5 @@
 #pragma once
-// app/SimulationTaylorExpansionLab.hpp
+// app/simulations/examples/SimulationTaylorExpansionLab.hpp
 // Minimal Taylor workbench entry point. The numerical/display panels will grow here.
 
 #include "engine/ISimulation.hpp"

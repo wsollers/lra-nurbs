@@ -1,12 +1,20 @@
 #include "app/simulations/LearningSimulation.hpp"
 
 #include <memory_resource>
+#include <utility>
 
 namespace ndde {
 
 LearningSimulation::LearningSimulation(memory::MemoryService* memory)
     : m_memory(memory)
     , m_workbenches(memory ? memory->persistent().resource() : std::pmr::get_default_resource())
+{
+}
+
+LearningSimulation::LearningSimulation(memory::MemoryService* memory, std::string workbench_id)
+    : m_memory(memory)
+    , m_workbenches(memory ? memory->persistent().resource() : std::pmr::get_default_resource())
+    , m_workbench_id(std::move(workbench_id))
 {
 }
 
@@ -32,7 +40,9 @@ void LearningSimulation::on_start() {
         m_status = "No learning workbenches registered";
         return;
     }
-    m_active_workbench = m_workbenches.create(*m_memory, 0);
+    m_active_workbench = m_workbench_id.empty()
+        ? m_workbenches.create(*m_memory, 0)
+        : m_workbenches.create(*m_memory, m_workbench_id);
     if (!m_active_workbench) {
         m_status = "Failed to create learning workbench";
         return;

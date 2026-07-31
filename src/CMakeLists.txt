@@ -106,6 +106,7 @@ add_library(ndde_engine STATIC
     engine/threading/ThreadManagementService.cpp
     engine/AppConfig.cpp
     engine/Engine.cpp
+    engine/SimulationRegistry.cpp
     engine/SimulationRuntime.cpp
 )
 target_include_directories(ndde_engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -122,21 +123,20 @@ target_link_libraries(ndde_engine PUBLIC
 
 # ── nurbs_dde executable ──────────────────────────────────────────────────────
 # Old simulations have been moved to src/old/ and are not compiled.
-# Only SimulationWavePredatorPrey is active.
 add_executable(nurbs_dde
     app/main.cpp
     app/AnimatedCurve.cpp
     app/IntegrationLabAnalyticsPackets.cpp
     app/IntegrationLabRenderPackets.cpp
     app/IntegrationWorkbenchState.cpp
-    app/SimulationIntegrationDerivativeLab.cpp
     app/SimulationLabPicker.cpp
     app/ParticleSystem.cpp
     app/SceneFactories.cpp
-    app/SimulationTaylorExpansionLab.cpp
-    app/SimulationWavePredatorPrey.cpp
     app/SurfaceMeshCache.cpp
     app/simulations/LearningSimulation.cpp
+    app/simulations/examples/SimulationIntegrationDerivativeLab.cpp
+    app/simulations/examples/SimulationTaylorExpansionLab.cpp
+    app/simulations/examples/SimulationWavePredatorPrey.cpp
     app/workbenches/function/FunctionDerivativeWorkbench.cpp
     app/workbenches/WorkbenchRegistry.cpp
     simulation/fields/IField.cpp

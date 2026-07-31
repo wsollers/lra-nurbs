@@ -1,4 +1,4 @@
-#include "app/SimulationIntegrationDerivativeLab.hpp"
+#include "app/simulations/examples/SimulationIntegrationDerivativeLab.hpp"
 
 #include "app/IntegrationLabAnalyticsPackets.hpp"
 #include "app/IntegrationLabRenderPackets.hpp"

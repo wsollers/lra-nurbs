@@ -2,7 +2,7 @@
 // app/SceneFactories.hpp
 // Simulation registration helpers used by Engine.
 
-#include "engine/SimulationRuntime.hpp"
+#include "engine/SimulationRegistry.hpp"
 
 #include <functional>
 

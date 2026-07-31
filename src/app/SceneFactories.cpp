@@ -2,11 +2,12 @@
 // Registers the active launcher, smoke-test sim, and learning labs.
 
 #include "app/SceneFactories.hpp"
-#include "app/SimulationIntegrationDerivativeLab.hpp"
 #include "app/SimulationLabPicker.hpp"
-#include "app/SimulationTaylorExpansionLab.hpp"
-#include "app/SimulationWavePredatorPrey.hpp"
 #include "app/simulations/LearningSimulation.hpp"
+#include "app/simulations/examples/SimulationIntegrationDerivativeLab.hpp"
+#include "app/simulations/examples/SimulationTaylorExpansionLab.hpp"
+#include "app/simulations/examples/SimulationWavePredatorPrey.hpp"
+#include "app/workbenches/WorkbenchRegistry.hpp"
 
 #include <utility>
 
@@ -21,7 +22,18 @@ void register_default_simulations(SimulationRegistry& registry,
 }
 
 void register_learning_simulations(SimulationRegistry& registry) {
-    registry.add_runtime<LearningSimulation>("Learning Workbench");
+    WorkbenchRegistry workbenches;
+    register_app_workbenches(workbenches);
+    for (std::size_t index = 0; index < workbenches.size(); ++index) {
+        const WorkbenchMetadata* metadata = workbenches.metadata(index);
+        if (!metadata) continue;
+        registry.add_runtime<LearningSimulation>(SimulationDescriptor{
+            .id = metadata->id,
+            .title = metadata->title,
+            .summary = metadata->summary,
+            .thumbnail_path = metadata->thumbnail_path
+        }, metadata->id);
+    }
 }
 
 } // namespace ndde

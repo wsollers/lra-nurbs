@@ -4,12 +4,12 @@
 // archived to src/old/ -- only SimulationWavePredatorPrey is active.
 
 #include "app/Curve2DOverlay.hpp"
-#include "app/SimulationIntegrationDerivativeLab.hpp"
 #include "app/SimulationLabPicker.hpp"
-#include "app/SimulationTaylorExpansionLab.hpp"
-#include "app/SimulationWavePredatorPrey.hpp"
 #include "app/SceneFactories.hpp"
 #include "app/simulations/LearningSimulation.hpp"
+#include "app/simulations/examples/SimulationIntegrationDerivativeLab.hpp"
+#include "app/simulations/examples/SimulationTaylorExpansionLab.hpp"
+#include "app/simulations/examples/SimulationWavePredatorPrey.hpp"
 #include "engine/SimulationHost.hpp"
 
 #include <gtest/gtest.h>
@@ -268,7 +268,9 @@ TEST(AllSimulations, LearningRegistryContainsWorkbenchRuntime) {
     register_learning_simulations(registry);
 
     ASSERT_EQ(registry.size(), 1u);
-    EXPECT_EQ(registry.get(0)->name(), "Learning Workbench");
+    EXPECT_EQ(registry.get(0)->name(), "Function and Derivative: sin(x)");
+    ASSERT_NE(registry.descriptor(0), nullptr);
+    EXPECT_EQ(registry.descriptor(0)->id, "learning.function_derivative.sin");
 }
 
 TEST(AllSimulations, WavePredatorPreyDoubleClickSurfacePickAddsRipple) {

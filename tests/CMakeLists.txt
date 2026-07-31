@@ -41,20 +41,21 @@ add_executable(ndde_tests
     ${CMAKE_SOURCE_DIR}/src/app/IntegrationLabAnalyticsPackets.cpp
     ${CMAKE_SOURCE_DIR}/src/app/IntegrationLabRenderPackets.cpp
     ${CMAKE_SOURCE_DIR}/src/app/IntegrationWorkbenchState.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/SimulationIntegrationDerivativeLab.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SimulationLabPicker.cpp
     ${CMAKE_SOURCE_DIR}/src/app/ParticleSystem.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SceneFactories.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/SimulationTaylorExpansionLab.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/SimulationWavePredatorPrey.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SurfaceMeshCache.cpp
     ${CMAKE_SOURCE_DIR}/src/app/simulations/LearningSimulation.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationIntegrationDerivativeLab.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationTaylorExpansionLab.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationWavePredatorPrey.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/function/FunctionDerivativeWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/WorkbenchRegistry.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/fields/IField.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/scenario/ScenarioBuilder.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/context/SimulationContext.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/AppConfig.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/SimulationRegistry.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/SimulationRuntime.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/capture/CaptureService.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/diagnostics/DiagnosticsService.cpp

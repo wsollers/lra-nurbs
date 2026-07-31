@@ -1,7 +1,7 @@
-// app/SimulationWavePredatorPrey.cpp
+// app/simulations/examples/SimulationWavePredatorPrey.cpp
 // Refactored thin simulation host using ScenarioBuilder + EventBusService.
 
-#include "app/SimulationWavePredatorPrey.hpp"
+#include "app/simulations/examples/SimulationWavePredatorPrey.hpp"
 #include "app/AlternateViewPanel.hpp"
 #include "app/FrenetFrame.hpp"
 #include "app/SimulationRenderPackets.hpp"

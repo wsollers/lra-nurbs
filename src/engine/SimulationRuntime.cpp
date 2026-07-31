@@ -211,23 +211,4 @@ SimulationMetadata SimulationRuntime::metadata() const {
     return data;
 }
 
-SimulationRegistry::SimulationRegistry(memory::MemoryService& memory) noexcept
-    : m_memory(memory)
-    , m_runtimes(memory.persistent().resource())
-{}
-
-void SimulationRegistry::add(memory::Unique<SimulationRuntime> runtime) {
-    m_runtimes.push_back(std::move(runtime));
-}
-
-SimulationRuntime* SimulationRegistry::get(std::size_t index) noexcept {
-    if (index >= m_runtimes.size()) return nullptr;
-    return m_runtimes[index].get();
-}
-
-const SimulationRuntime* SimulationRegistry::get(std::size_t index) const noexcept {
-    if (index >= m_runtimes.size()) return nullptr;
-    return m_runtimes[index].get();
-}
-
 } // namespace ndde

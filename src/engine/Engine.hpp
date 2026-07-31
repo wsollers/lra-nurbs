@@ -4,6 +4,7 @@
 #include "engine/AppConfig.hpp"
 #include "engine/EngineAPI.hpp"
 #include "engine/IScene.hpp"
+#include "engine/SimulationRegistry.hpp"
 #include "engine/SimulationHost.hpp"
 #include "engine/SimulationRuntime.hpp"
 // engine/events/ headers: included transitively via EngineEventTypes.hpp below.

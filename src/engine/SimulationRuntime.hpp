@@ -14,8 +14,6 @@
 #include <span>
 #include <string>
 #include <string_view>
-#include <tuple>
-#include <type_traits>
 
 namespace ndde {
 
@@ -80,40 +78,6 @@ private:
     SimulationSnapshotStore m_snapshots;
     bool m_started = false;
     bool m_paused = true;
-};
-
-class SimulationRegistry {
-public:
-    explicit SimulationRegistry(memory::MemoryService& memory) noexcept;
-
-    void add(memory::Unique<SimulationRuntime> runtime);
-
-    template <class Simulation, class... Args>
-    void add_runtime(std::string name, Args&&... args) {
-        auto runtime = m_memory.persistent().make_unique<SimulationRuntime>(
-            std::move(name),
-            [args_tuple = std::tuple<std::decay_t<Args>...>(std::forward<Args>(args)...)]
-            (memory::MemoryService& memory) mutable -> memory::Unique<ISimulation> {
-                return std::apply([&memory](auto&&... unpacked) -> memory::Unique<ISimulation> {
-                    if constexpr (std::is_constructible_v<Simulation, memory::MemoryService*, decltype(unpacked)...>) {
-                        return memory.simulation().make_unique_as<ISimulation, Simulation>(
-                            &memory, std::forward<decltype(unpacked)>(unpacked)...);
-                    } else {
-                        return memory.simulation().make_unique_as<ISimulation, Simulation>(
-                            std::forward<decltype(unpacked)>(unpacked)...);
-                    }
-                }, args_tuple);
-            });
-        add(std::move(runtime));
-    }
-
-    [[nodiscard]] std::size_t size() const noexcept { return m_runtimes.size(); }
-    [[nodiscard]] SimulationRuntime* get(std::size_t index) noexcept;
-    [[nodiscard]] const SimulationRuntime* get(std::size_t index) const noexcept;
-
-private:
-    memory::MemoryService& m_memory;
-    memory::PersistentVector<memory::Unique<SimulationRuntime>> m_runtimes;
 };
 
 } // namespace ndde

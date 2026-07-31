@@ -1,4 +1,5 @@
 #include "engine/SimulationRuntime.hpp"
+#include "engine/SimulationRegistry.hpp"
 #include "engine/SimulationHost.hpp"
 #include "engine/threading/ThreadManagementService.hpp"
 
@@ -280,6 +281,8 @@ TEST(SimulationRuntime, RegistryStoresSimulationRuntimesOnly) {
     ASSERT_NE(registry.get(1), nullptr);
     EXPECT_EQ(registry.get(0)->name(), "Simulation A");
     EXPECT_EQ(registry.get(1)->name(), "Simulation B");
+    ASSERT_NE(registry.descriptor(0), nullptr);
+    EXPECT_EQ(registry.descriptor(0)->title, "Simulation A");
 }
 
 TEST(SimulationRuntime, ProcessesThreadCommandsAndPublishesSnapshotMailbox) {

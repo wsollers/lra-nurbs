@@ -1,5 +1,5 @@
 #pragma once
-// app/SimulationIntegrationDerivativeLab.hpp
+// app/simulations/examples/SimulationIntegrationDerivativeLab.hpp
 // First vertical slice of the integration and derivative mathematical lab.
 
 #include "app/IntegrationWorkbenchState.hpp"
