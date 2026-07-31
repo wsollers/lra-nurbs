@@ -36,6 +36,17 @@ struct AxisLabelConfig {
     bool show = true;
 };
 
+struct ResolvedAxisGradations {
+    f32 minor_step = 0.2f;
+    f32 major_step = 1.f;
+};
+
+struct ResolvedAxisLabels2D {
+    bool show = true;
+    TextDrawCommand x_axis{};
+    TextDrawCommand y_axis{};
+};
+
 struct CoordinateOverlayDescriptor {
     CoordinateSpaceKind space = CoordinateSpaceKind::Cartesian2D;
     AxisGradationConfig gradations{};
@@ -50,6 +61,12 @@ class CoordinateOverlayService {
 public:
     [[nodiscard]] static CoordinateVisibleBounds2D visible_bounds(RenderService& render,
                                                                   RenderViewId view) noexcept;
+
+    [[nodiscard]] static ResolvedAxisGradations resolve_gradations(CoordinateVisibleBounds2D bounds,
+                                                                   AxisGradationConfig config) noexcept;
+
+    [[nodiscard]] static ResolvedAxisLabels2D resolve_axis_labels(CoordinateVisibleBounds2D bounds,
+                                                                  const AxisLabelConfig& labels);
 
     static void submit(RenderService& render,
                        TextOverlayService& text,

@@ -160,28 +160,22 @@ void submit_axis_labels(TextOverlayService& text,
                         RenderViewId view,
                         CoordinateVisibleBounds2D bounds,
                         const AxisLabelConfig& labels) {
-    if (!labels.show) return;
-
-    text.submit(TextDrawRequest{
-        .view = view,
-        .space = TextCoordinateSpace::Domain,
-        .anchor = TextAnchor::Center,
-        .position = Vec2{bounds.right, 0.f},
-        .color = math::colors::X_AXIS,
-        .size_px = 14.f,
-        .font = TextFontRole::Math,
-        .text = labels.x
-    });
-    text.submit(TextDrawRequest{
-        .view = view,
-        .space = TextCoordinateSpace::Domain,
-        .anchor = TextAnchor::Center,
-        .position = Vec2{0.f, bounds.top},
-        .color = math::colors::Y_AXIS,
-        .size_px = 14.f,
-        .font = TextFontRole::Math,
-        .text = labels.y
-    });
+    ResolvedAxisLabels2D resolved = CoordinateOverlayService::resolve_axis_labels(bounds, labels);
+    if (!resolved.show) return;
+    const auto submit_resolved = [&](const TextDrawCommand& command) {
+        text.submit(TextDrawRequest{
+            .view = view,
+            .space = command.space,
+            .anchor = command.anchor,
+            .position = command.position,
+            .color = command.color,
+            .size_px = command.size_px,
+            .font = command.font,
+            .text = command.text
+        });
+    };
+    submit_resolved(resolved.x_axis);
+    submit_resolved(resolved.y_axis);
 }
 
 } // namespace
@@ -202,6 +196,48 @@ CoordinateVisibleBounds2D CoordinateOverlayService::visible_bounds(RenderService
     };
 }
 
+ResolvedAxisGradations CoordinateOverlayService::resolve_gradations(CoordinateVisibleBounds2D bounds,
+                                                                    AxisGradationConfig config) noexcept {
+    const f32 dynamic_step = nice_grid_step(std::max(bounds.width(), bounds.height()));
+    const f32 minor_step = config.dynamic_steps
+        ? dynamic_step
+        : std::max(config.minor_step, 0.001f);
+    const f32 major_step = config.dynamic_steps
+        ? dynamic_step * 5.f
+        : std::max(config.major_step, minor_step);
+    return ResolvedAxisGradations{
+        .minor_step = minor_step,
+        .major_step = major_step
+    };
+}
+
+ResolvedAxisLabels2D CoordinateOverlayService::resolve_axis_labels(CoordinateVisibleBounds2D bounds,
+                                                                   const AxisLabelConfig& labels) {
+    return ResolvedAxisLabels2D{
+        .show = labels.show,
+        .x_axis = TextDrawCommand{
+            .view = RenderViewId(0),
+            .space = TextCoordinateSpace::Domain,
+            .anchor = TextAnchor::Center,
+            .position = Vec2{bounds.right, 0.f},
+            .color = math::colors::X_AXIS,
+            .size_px = 14.f,
+            .font = TextFontRole::Math,
+            .text = labels.x
+        },
+        .y_axis = TextDrawCommand{
+            .view = RenderViewId(0),
+            .space = TextCoordinateSpace::Domain,
+            .anchor = TextAnchor::Center,
+            .position = Vec2{0.f, bounds.top},
+            .color = math::colors::Y_AXIS,
+            .size_px = 14.f,
+            .font = TextFontRole::Math,
+            .text = labels.y
+        }
+    };
+}
+
 void CoordinateOverlayService::submit(RenderService& render,
                                       TextOverlayService& text,
                                       memory::MemoryService& memory,
@@ -211,16 +247,10 @@ void CoordinateOverlayService::submit(RenderService& render,
     if (view == 0) return;
 
     const CoordinateVisibleBounds2D bounds = visible_bounds(render, view);
-    const f32 dynamic_step = nice_grid_step(std::max(bounds.width(), bounds.height()));
-    const f32 minor_step = descriptor.gradations.dynamic_steps
-        ? dynamic_step
-        : std::max(descriptor.gradations.minor_step, 0.001f);
-    const f32 major_step = descriptor.gradations.dynamic_steps
-        ? dynamic_step * 5.f
-        : std::max(descriptor.gradations.major_step, minor_step);
+    const ResolvedAxisGradations gradations = resolve_gradations(bounds, descriptor.gradations);
 
     if (descriptor.show_grid) {
-        submit_cartesian_grid(render, memory, view, bounds, minor_step, major_step, mvp);
+        submit_cartesian_grid(render, memory, view, bounds, gradations.minor_step, gradations.major_step, mvp);
     }
     if (descriptor.space == CoordinateSpaceKind::Polar2D ||
         descriptor.show_polar_rings ||
@@ -229,7 +259,7 @@ void CoordinateOverlayService::submit(RenderService& render,
                              memory,
                              view,
                              bounds,
-                             major_step,
+                             gradations.major_step,
                              descriptor.space == CoordinateSpaceKind::Polar2D || descriptor.show_polar_rings,
                              descriptor.space == CoordinateSpaceKind::Polar2D || descriptor.show_polar_spokes,
                              mvp);

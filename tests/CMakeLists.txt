@@ -6,6 +6,7 @@ add_executable(ndde_tests
     test_alternate_view_builders.cpp
     test_app_config.cpp
     test_conics.cpp
+    test_coordinate_overlay_service.cpp
     test_capture_service.cpp
     test_axes.cpp
     test_numeric.cpp
