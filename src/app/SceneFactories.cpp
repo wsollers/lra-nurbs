@@ -14,7 +14,7 @@
 namespace ndde {
 
 void register_default_simulations(SimulationRegistry& registry,
-                                  SimulationSwitchRequest switch_request) {
+                                  std::function<void(std::size_t)> switch_request) {
     registry.add_runtime<SimulationLabPicker>("Lab Picker", std::move(switch_request));
     register_wave_predator_prey_workbench(registry);
     register_integration_derivative_lab_workbench(registry);

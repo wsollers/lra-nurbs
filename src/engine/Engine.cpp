@@ -3,7 +3,6 @@
 #include <volk.h>
 
 #include "engine/Engine.hpp"
-#include "app/SceneFactories.hpp"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -19,6 +18,7 @@
 #include <span>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -202,6 +202,12 @@ void Engine::start(const std::filesystem::path& executable_path,
         (void)m_services.logger().write(LogSeverity::Info, LogCategory::Engine, {}, "Engine ready");
     });
     std::cout << "[Engine] Ready for startup mode selection.\n";
+}
+
+void Engine::set_simulation_registrars(ExamplesSimulationRegistrar examples,
+                                       LearningSimulationRegistrar learning) {
+    m_examples_registrar = std::move(examples);
+    m_learning_registrar = std::move(learning);
 }
 
 void Engine::install_global_hotkeys() {
@@ -480,7 +486,10 @@ void Engine::enter_examples_mode() {
     glfwMaximizeWindow(m_glfw.window());
 
     register_global_panels();
-    register_default_simulations(m_simulations, [this](std::size_t index) {
+    if (!m_examples_registrar) {
+        throw std::runtime_error("[Engine] Example simulation registrar was not configured");
+    }
+    m_examples_registrar(m_simulations, [this](std::size_t index) {
         m_pending_sim = index;
     });
 
@@ -508,7 +517,10 @@ void Engine::enter_learning_mode() {
     m_glfw.set_title("Simulation");
     position_learning_windows();
     init_auxiliary_window("Diagnostics");
-    register_learning_simulations(m_simulations);
+    if (!m_learning_registrar) {
+        throw std::runtime_error("[Engine] Learning simulation registrar was not configured");
+    }
+    m_learning_registrar(m_simulations);
 
     m_active_sim = 0;
     active_runtime().instantiate(m_simulation_host);

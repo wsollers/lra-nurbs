@@ -100,16 +100,19 @@ flowchart TD
 
 ## Current Active Simulation
 
-The default runtime currently registers only:
+The default runtime registers the app picker plus active app workbenches:
 
+- `LearningSimulation` workbench runtimes registered from `WorkbenchRegistry`
+- `SimulationIntegrationDerivativeLab`
+- `SimulationTaylorExpansionLab`
 - `SimulationWavePredatorPrey`
 
-Archived simulations live under `src/old`. They are useful references, but they
-are not active runtime components until ported to the current `ISimulation`
-and service model.
+Gallery-facing workbench assembly lives under `src/app/workbenches/<Name>`.
+Reusable simulation building blocks live under `src/simulation`; they should
+not depend on app workbench code.
 
-This distinction matters: documents or UI that imply the old ODE/DDE scenes are
-active should be treated as stale until those scenes are ported.
+See `docs/ARCHITECTURE_BOUNDARIES.md` for the current include and ownership
+rules.
 
 ## Engine And Service Boundaries
 
@@ -471,13 +474,11 @@ opening a Vulkan window.
 
 ### Near Term
 
-1. Port `SimulationDifferential2D` and `SimulationDelayDifferential2D` out of
-   `src/old` into the current service architecture.
-2. Add a `SimulationGravitational2D` scene using `SimplePendulumSystem` and
+1. Add a `SimulationGravitational2D` scene using `SimplePendulumSystem` and
    `PlanarNBodyGravitySystem`.
-3. Implement `MetricRipple::diffusion_contribution()` so Brownian noise responds
+2. Implement `MetricRipple::diffusion_contribution()` so Brownian noise responds
    to the conformal metric.
-4. Rename or revise `DampingField` if its intended meaning is velocity drag;
+3. Rename or revise `DampingField` if its intended meaning is velocity drag;
    the current implementation is positional drift toward the origin.
 
 ### Medium Term

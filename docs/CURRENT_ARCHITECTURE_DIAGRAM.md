@@ -15,6 +15,12 @@ Renderer owns Vulkan.
 MemoryService owns dynamic allocation policy and lifetime scopes.
 ```
 
+The current source boundary note lives in
+`docs/ARCHITECTURE_BOUNDARIES.md`. In short: `math/numeric` is pure math,
+`engine/{renderer,platform,telemetry}` are engine-owned subsystems,
+`app/workbenches/<Name>` owns gallery/workbench assembly, and reusable
+simulation building blocks live under `src/simulation`.
+
 ## System Layers
 
 ```mermaid

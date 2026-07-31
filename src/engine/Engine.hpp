@@ -19,6 +19,7 @@
 #include "memory/Containers.hpp"
 #include "engine/telemetry/TelemetryService.hpp"
 #include "simulation/events/EngineEventTypes.hpp"
+#include <cstddef>
 #include <filesystem>
 #include <functional>
 #include <string>
@@ -33,6 +34,10 @@ enum class StartupMode {
     Learning
 };
 
+using SimulationSwitchRequest = std::function<void(std::size_t)>;
+using ExamplesSimulationRegistrar = std::function<void(SimulationRegistry&, SimulationSwitchRequest)>;
+using LearningSimulationRegistrar = std::function<void(SimulationRegistry&)>;
+
 class Engine {
 public:
     Engine();
@@ -46,6 +51,8 @@ public:
     void start(const std::filesystem::path& executable_path = {},
                const std::filesystem::path& config_path = "engine_config.json");
     void run();
+    void set_simulation_registrars(ExamplesSimulationRegistrar examples,
+                                   LearningSimulationRegistrar learning);
 
     void switch_simulation(std::size_t index);
 
@@ -81,6 +88,8 @@ private:
     StartupMode              m_startup_mode = StartupMode::Choose;
     int                      m_startup_choice = 0;
     bool                     m_startup_popup_opened = false;
+    ExamplesSimulationRegistrar m_examples_registrar;
+    LearningSimulationRegistrar m_learning_registrar;
 
     // Per-frame state
     double     m_last_frame_time = 0.0;
