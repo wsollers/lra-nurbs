@@ -1,4 +1,4 @@
-#include "app/simulations/examples/SimulationTaylorExpansionLab.hpp"
+#include "app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.hpp"
 
 #include <cmath>
 #include <imgui.h>

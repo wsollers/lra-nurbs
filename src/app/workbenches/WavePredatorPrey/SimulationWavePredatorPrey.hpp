@@ -1,5 +1,5 @@
 #pragma once
-// app/simulations/examples/SimulationWavePredatorPrey.hpp
+// app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.hpp
 // Refactored thin simulation host.
 // Delegates particle construction to ScenarioBuilder,
 // environmental effects to FieldCompositor,

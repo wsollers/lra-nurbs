@@ -125,17 +125,17 @@ target_link_libraries(ndde_engine PUBLIC
 # Old simulations have been moved to src/old/ and are not compiled.
 add_executable(nurbs_dde
     app/main.cpp
-    app/simulations/examples/integration/IntegrationLabAnalyticsPackets.cpp
-    app/simulations/examples/integration/IntegrationLabRenderPackets.cpp
-    app/simulations/examples/integration/IntegrationWorkbenchState.cpp
+    app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabAnalyticsPackets.cpp
+    app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabRenderPackets.cpp
+    app/workbenches/IntegrationDerivativeLab/integration/IntegrationWorkbenchState.cpp
     app/SimulationLabPicker.cpp
     app/SceneFactories.cpp
     app/SurfaceMeshCache.cpp
-    app/simulations/LearningSimulation.cpp
-    app/simulations/examples/SimulationIntegrationDerivativeLab.cpp
-    app/simulations/examples/SimulationTaylorExpansionLab.cpp
-    app/simulations/examples/SimulationWavePredatorPrey.cpp
-    app/workbenches/function/FunctionDerivativeWorkbench.cpp
+    app/workbenches/Learning/LearningSimulation.cpp
+    app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.cpp
+    app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.cpp
+    app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.cpp
+    app/workbenches/FunctionDerivative/FunctionDerivativeWorkbench.cpp
     app/workbenches/WorkbenchRegistry.cpp
     simulation/curves/AnimatedCurve.cpp
     simulation/fields/IField.cpp

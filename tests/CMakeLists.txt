@@ -38,17 +38,17 @@ add_executable(ndde_tests
     # Re-enable when those sims are ported to the new simulation/ layer.
     # test_differential_system.cpp
     # test_simulation_surface_gaussian.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/integration/IntegrationLabAnalyticsPackets.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/integration/IntegrationLabRenderPackets.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/integration/IntegrationWorkbenchState.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabAnalyticsPackets.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabRenderPackets.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/integration/IntegrationWorkbenchState.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SimulationLabPicker.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SceneFactories.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SurfaceMeshCache.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/LearningSimulation.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationIntegrationDerivativeLab.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationTaylorExpansionLab.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationWavePredatorPrey.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/workbenches/function/FunctionDerivativeWorkbench.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/Learning/LearningSimulation.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/workbenches/FunctionDerivative/FunctionDerivativeWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/WorkbenchRegistry.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/curves/AnimatedCurve.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/fields/IField.cpp

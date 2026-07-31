@@ -1,5 +1,5 @@
 #pragma once
-// app/workbenches/function/FunctionDerivativeWorkbench.hpp
+// app/workbenches/FunctionDerivative/FunctionDerivativeWorkbench.hpp
 // Workbench for drawing f(x) = sin(x) and its derivative.
 
 #include "app/workbenches/Workbench.hpp"

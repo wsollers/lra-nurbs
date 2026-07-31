@@ -3,10 +3,10 @@
 
 #include "app/SceneFactories.hpp"
 #include "app/SimulationLabPicker.hpp"
-#include "app/simulations/LearningSimulation.hpp"
-#include "app/simulations/examples/SimulationIntegrationDerivativeLab.hpp"
-#include "app/simulations/examples/SimulationTaylorExpansionLab.hpp"
-#include "app/simulations/examples/SimulationWavePredatorPrey.hpp"
+#include "app/workbenches/Learning/LearningSimulation.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.hpp"
+#include "app/workbenches/TaylorExpansionLab/SimulationTaylorExpansionLab.hpp"
+#include "app/workbenches/WavePredatorPrey/SimulationWavePredatorPrey.hpp"
 #include "app/workbenches/WorkbenchRegistry.hpp"
 
 #include <utility>

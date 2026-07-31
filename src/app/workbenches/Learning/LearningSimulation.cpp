@@ -1,4 +1,4 @@
-#include "app/simulations/LearningSimulation.hpp"
+#include "app/workbenches/Learning/LearningSimulation.hpp"
 
 #include "engine/coordinates/CoordinateOverlayService.hpp"
 

@@ -1,5 +1,5 @@
 #pragma once
-// app/simulations/LearningSimulation.hpp
+// app/workbenches/Learning/LearningSimulation.hpp
 // App-owned simulation shell for the selected workbench gallery entry.
 
 #include "app/workbenches/Workbench.hpp"

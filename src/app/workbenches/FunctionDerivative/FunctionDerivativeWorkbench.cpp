@@ -1,4 +1,4 @@
-#include "app/workbenches/function/FunctionDerivativeWorkbench.hpp"
+#include "app/workbenches/FunctionDerivative/FunctionDerivativeWorkbench.hpp"
 
 #include "app/workbenches/WorkbenchRegistry.hpp"
 

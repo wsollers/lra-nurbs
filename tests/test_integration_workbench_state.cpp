@@ -1,4 +1,4 @@
-#include "app/simulations/examples/integration/IntegrationWorkbenchState.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/integration/IntegrationWorkbenchState.hpp"
 
 #include <gtest/gtest.h>
 

@@ -1,7 +1,7 @@
-#include "app/simulations/examples/SimulationIntegrationDerivativeLab.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/SimulationIntegrationDerivativeLab.hpp"
 
-#include "app/simulations/examples/integration/IntegrationLabAnalyticsPackets.hpp"
-#include "app/simulations/examples/integration/IntegrationLabRenderPackets.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabAnalyticsPackets.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabRenderPackets.hpp"
 #include "engine/RenderService.hpp"
 #include "engine/metadata/MetadataTypes.hpp"
 #include "math/GeometryTypes.hpp"

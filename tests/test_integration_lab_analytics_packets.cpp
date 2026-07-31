@@ -1,4 +1,4 @@
-#include "app/simulations/examples/integration/IntegrationLabAnalyticsPackets.hpp"
+#include "app/workbenches/IntegrationDerivativeLab/integration/IntegrationLabAnalyticsPackets.hpp"
 #include "engine/SimulationHost.hpp"
 
 #include <gtest/gtest.h>
