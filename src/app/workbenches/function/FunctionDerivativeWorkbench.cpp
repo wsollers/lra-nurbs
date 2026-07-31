@@ -1,6 +1,6 @@
-#include "app/simulations/learning/FunctionDerivativeWorkbench.hpp"
+#include "app/workbenches/function/FunctionDerivativeWorkbench.hpp"
 
-#include "app/simulations/learning/WorkbenchRegistry.hpp"
+#include "app/workbenches/WorkbenchRegistry.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -51,6 +51,31 @@ void FunctionDerivativeWorkbench::on_start(WorkbenchRenderContext& context) {
         .v_max = 2.5f,
         .z_min = -1.f,
         .z_max = 1.f
+    });
+}
+
+void FunctionDerivativeWorkbench::build(sim::WorkbenchBuildContext& build) {
+    const sim::SimulationContextHandle sim = build.add_simulation(sim::SimulationContextDescriptor{
+        .name = "Function graph"
+    });
+    (void)build.add_overlay(sim, sim::OverlayDescriptor{
+        .name = "Cartesian function canvas",
+        .kind = "coordinate.cartesian2d",
+        .x_label = "x",
+        .y_label = "y",
+        .dynamic_gradations = true
+    });
+    (void)build.add_curve(sim, sim::CurveDescriptor{
+        .name = "f(x)",
+        .formula = "sin(x)",
+        .color = function_color(),
+        .evaluate = [](f32 x) { return std::sin(x); }
+    });
+    (void)build.add_curve(sim, sim::CurveDescriptor{
+        .name = "f'(x)",
+        .formula = "cos(x)",
+        .color = derivative_color(),
+        .evaluate = [](f32 x) { return std::cos(x); }
     });
 }
 

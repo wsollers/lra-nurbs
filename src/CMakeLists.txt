@@ -84,6 +84,7 @@ target_link_libraries(ndde_telemetry PUBLIC ndde_math)
 # Pure simulation logic. No ImGui or Vulkan. App/runtime code adapts concrete
 # particle objects into compact simulation-facing views before evaluating rules.
 add_library(ndde_simulation STATIC
+    simulation/context/SimulationContext.cpp
     simulation/events/EventBus.cpp
     simulation/events/EventLog.cpp
     simulation/events/AlertRule.cpp
@@ -136,8 +137,8 @@ add_executable(nurbs_dde
     app/SimulationWavePredatorPrey.cpp
     app/SurfaceMeshCache.cpp
     app/simulations/LearningSimulation.cpp
-    app/simulations/learning/FunctionDerivativeWorkbench.cpp
-    app/simulations/learning/WorkbenchRegistry.cpp
+    app/workbenches/function/FunctionDerivativeWorkbench.cpp
+    app/workbenches/WorkbenchRegistry.cpp
     simulation/fields/IField.cpp
     simulation/scenario/ScenarioBuilder.cpp
 )

@@ -1,8 +1,8 @@
 #pragma once
-// app/simulations/learning/WorkbenchRegistry.hpp
-// Explicit metadata + factory registry for learning workbenches.
+// app/workbenches/WorkbenchRegistry.hpp
+// Explicit metadata + factory registry for gallery workbenches.
 
-#include "app/simulations/learning/IWorkbench.hpp"
+#include "app/workbenches/Workbench.hpp"
 #include "memory/Containers.hpp"
 #include "memory/MemoryService.hpp"
 #include "memory/Unique.hpp"
@@ -37,7 +37,7 @@ private:
     memory::PersistentVector<Entry> m_entries;
 };
 
-void register_learning_workbenches(WorkbenchRegistry& registry);
+void register_app_workbenches(WorkbenchRegistry& registry);
 void register_function_derivative_workbench(WorkbenchRegistry& registry);
 
 } // namespace ndde

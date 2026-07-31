@@ -14,7 +14,7 @@ void LearningSimulation::on_register(SimulationHost& host) {
     m_host = &host;
     m_memory = &host.memory();
     if (m_workbenches.size() == 0) {
-        register_learning_workbenches(m_workbenches);
+        register_app_workbenches(m_workbenches);
     }
 
     m_main_handle = host.render().register_view(RenderViewDescriptor{
@@ -37,6 +37,8 @@ void LearningSimulation::on_start() {
         m_status = "Failed to create learning workbench";
         return;
     }
+    m_build_context.clear();
+    m_active_workbench->build(m_build_context);
     auto context = render_context();
     m_active_workbench->on_start(context);
     m_status = m_active_workbench->metadata().title;
@@ -65,6 +67,7 @@ void LearningSimulation::on_stop() {
         m_active_workbench->on_stop();
         m_active_workbench.reset();
     }
+    m_build_context.clear();
     m_main_handle.reset();
     m_main_view = RenderViewId(0);
     m_host = nullptr;

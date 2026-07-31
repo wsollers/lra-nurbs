@@ -1,8 +1,8 @@
 #pragma once
-// app/simulations/learning/FunctionDerivativeWorkbench.hpp
+// app/workbenches/function/FunctionDerivativeWorkbench.hpp
 // Workbench for drawing f(x) = sin(x) and its derivative.
 
-#include "app/simulations/learning/IWorkbench.hpp"
+#include "app/workbenches/Workbench.hpp"
 #include "engine/coordinates/CoordinateOverlayService.hpp"
 
 namespace ndde {
@@ -12,6 +12,7 @@ public:
     FunctionDerivativeWorkbench();
 
     [[nodiscard]] const WorkbenchMetadata& metadata() const noexcept override { return m_metadata; }
+    void build(sim::WorkbenchBuildContext& build) override;
     void on_start(WorkbenchRenderContext& context) override;
     void on_tick(const TickInfo& tick) override;
     void on_submit_render(WorkbenchRenderContext& context) override;

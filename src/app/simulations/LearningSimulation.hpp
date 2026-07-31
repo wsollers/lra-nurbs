@@ -1,10 +1,11 @@
 #pragma once
 // app/simulations/LearningSimulation.hpp
-// App-owned simulation shell for learning workbenches.
+// App-owned simulation shell for the selected workbench gallery entry.
 
-#include "app/simulations/learning/IWorkbench.hpp"
-#include "app/simulations/learning/WorkbenchRegistry.hpp"
+#include "app/workbenches/Workbench.hpp"
+#include "app/workbenches/WorkbenchRegistry.hpp"
 #include "engine/ISimulation.hpp"
+#include "simulation/context/WorkbenchBuildContext.hpp"
 
 namespace ndde {
 
@@ -31,6 +32,7 @@ private:
     RenderViewId m_main_view = RenderViewId(0);
     WorkbenchRegistry m_workbenches;
     memory::Unique<IWorkbench> m_active_workbench;
+    sim::WorkbenchBuildContext m_build_context;
     f32 m_time = 0.f;
     std::string m_status = "Ready";
 

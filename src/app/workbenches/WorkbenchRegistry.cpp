@@ -1,4 +1,4 @@
-#include "app/simulations/learning/WorkbenchRegistry.hpp"
+#include "app/workbenches/WorkbenchRegistry.hpp"
 
 #include <utility>
 
@@ -41,7 +41,7 @@ memory::Unique<IWorkbench> WorkbenchRegistry::create(memory::MemoryService& memo
     return {};
 }
 
-void register_learning_workbenches(WorkbenchRegistry& registry) {
+void register_app_workbenches(WorkbenchRegistry& registry) {
     register_function_derivative_workbench(registry);
 }
 
