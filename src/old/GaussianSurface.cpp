@@ -1,8 +1,8 @@
 // app/GaussianSurface.cpp
 #include "app/GaussianSurface.hpp"
-#include "app/AnimatedCurve.hpp"
-#include "app/FrenetFrame.hpp"
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
+#include "simulation/curves/FrenetFrame.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "sim/IEquation.hpp"
 #include "sim/IIntegrator.hpp"
 #include "sim/HistoryBuffer.hpp"
@@ -363,7 +363,7 @@ void AnimatedCurve::bind_behavior_stack() noexcept {
         stack->set_owner(m_id);
 }
 
-void AnimatedCurve::set_behavior_context(const SimulationContext* context) noexcept {
+void AnimatedCurve::set_behavior_context(const ParticleSimulationContext* context) noexcept {
     if (auto* stack = dynamic_cast<BehaviorStack*>(m_equation))
         stack->set_context(context);
 }

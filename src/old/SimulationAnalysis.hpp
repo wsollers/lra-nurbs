@@ -3,9 +3,9 @@
 #include "app/AnalysisSpawner.hpp"
 #include "app/GoalStatusPanel.hpp"
 #include "app/ParticleInspectorPanel.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/SimulationControlPanel.hpp"
-#include "app/SimulationContext.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
 #include "app/SimulationPanelModels.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "app/SurfaceRegistry.hpp"
@@ -45,7 +45,7 @@ private:
     bool m_paused = false;
     GoalStatus m_goal_status = GoalStatus::Running;
     AnalysisSpawner m_spawner;
-    SimulationContext m_context;
+    ParticleSimulationContext m_context;
     SurfaceMeshCache m_mesh;
     SimulationHost* m_host = nullptr;
     ScopedServiceHandles<PanelHandle> m_panel_handles;

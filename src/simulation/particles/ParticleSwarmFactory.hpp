@@ -1,10 +1,10 @@
 #pragma once
-// app/ParticleSwarmFactory.hpp
+// simulation/particles/ParticleSwarmFactory.hpp
 // Recipe layer for emitting particle groups with shared behavior/goals.
 
-#include "app/ParticleBehaviors.hpp"
-#include "app/ParticleGoals.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
+#include "simulation/particles/ParticleGoals.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "memory/Containers.hpp"
 #include "sim/LevelCurveWalker.hpp"
 #include "numeric/ops.hpp"

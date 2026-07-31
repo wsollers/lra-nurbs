@@ -1,6 +1,6 @@
 #include "app/AnalysisSpawner.hpp"
 
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "sim/LevelCurveWalker.hpp"
 
 #include <cmath>
@@ -140,7 +140,7 @@ SwarmBuildResult AnalysisSpawner::spawn_walker() {
 
     AnimatedCurve& c = m_particles.spawn(std::move(builder));
 
-    SimulationContext context = m_particles.context(m_sim_time);
+    ParticleSimulationContext context = m_particles.context(m_sim_time);
     context.set_time(m_sim_time);
     c.set_behavior_context(&context);
 

@@ -1,4 +1,4 @@
-#include "app/GaussianRipple.hpp"
+#include "simulation/surfaces/GaussianRipple.hpp"
 #include "app/SurfaceRegistry.hpp"
 #include "math/SineRationalSurface.hpp"
 #include "math/Surfaces.hpp"

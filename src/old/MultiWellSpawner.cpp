@@ -1,6 +1,6 @@
 #include "app/MultiWellSpawner.hpp"
 
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "memory/Containers.hpp"
 #include "numeric/ops.hpp"
 

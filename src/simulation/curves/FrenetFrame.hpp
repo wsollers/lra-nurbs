@@ -1,5 +1,5 @@
 #pragma once
-// app/FrenetFrame.hpp
+// simulation/curves/FrenetFrame.hpp
 // FrenetFrame, SurfaceFrame, and make_surface_frame.
 //
 // Moved from GaussianSurface.hpp (B1 refactor) so that AnimatedCurve.hpp

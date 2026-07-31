@@ -1,5 +1,5 @@
 #pragma once
-// app/AnimatedCurve.hpp
+// simulation/curves/AnimatedCurve.hpp
 // AnimatedCurve: one walker particle on a parametric surface.
 //
 // Moved from GaussianSurface.hpp (B1 refactor) so that particle helpers and
@@ -40,9 +40,9 @@
 #include "sim/IIntegrator.hpp"
 #include "sim/IConstraint.hpp"
 #include "sim/HistoryBuffer.hpp"
-#include "app/ParticleBehaviors.hpp"
-#include "app/FrenetFrame.hpp"
-#include "app/ParticleTypes.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
+#include "simulation/curves/FrenetFrame.hpp"
+#include "simulation/particles/ParticleTypes.hpp"
 #include "math/GeometryTypes.hpp"
 #include "memory/Containers.hpp"
 #include "memory/MemoryService.hpp"
@@ -54,7 +54,7 @@
 
 namespace ndde {
 
-class SimulationContext;
+class ParticleSimulationContext;
 
 class AnimatedCurve {
 public:
@@ -115,7 +115,7 @@ public:
     [[nodiscard]] const TrailConfig& trail_config() const noexcept { return m_trail_config; }
 
     void bind_behavior_stack() noexcept;
-    void set_behavior_context(const SimulationContext* context) noexcept;
+    void set_behavior_context(const ParticleSimulationContext* context) noexcept;
     [[nodiscard]] ParticleMetadata metadata() const;
     [[nodiscard]] std::string metadata_label() const;
     [[nodiscard]] f32 max_delay_seconds() const noexcept;

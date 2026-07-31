@@ -12,8 +12,8 @@
 #include "math/Scalars.hpp"
 #include "math/Surfaces.hpp"    // ISurface base class
 #include "math/GeometryTypes.hpp"
-#include "app/FrenetFrame.hpp"   // FrenetFrame, SurfaceFrame, make_surface_frame
-#include "app/AnimatedCurve.hpp" // AnimatedCurve
+#include "simulation/curves/FrenetFrame.hpp"   // FrenetFrame, SurfaceFrame, make_surface_frame
+#include "simulation/curves/AnimatedCurve.hpp" // AnimatedCurve
 #include <glm/glm.hpp>
 #include <span>
 

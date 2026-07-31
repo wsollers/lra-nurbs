@@ -1,5 +1,5 @@
 #pragma once
-// app/GaussianRipple.hpp
+// simulation/surfaces/GaussianRipple.hpp
 // GaussianRipple: Gaussian height-field base + decaying radial wave.
 // Inherits IDeformableSurface -- is_time_varying() returns true.
 //

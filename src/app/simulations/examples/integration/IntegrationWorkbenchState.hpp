@@ -1,5 +1,5 @@
 #pragma once
-// app/IntegrationWorkbenchState.hpp
+// app/simulations/examples/integration/IntegrationWorkbenchState.hpp
 // UI-neutral state and immutable snapshots for the Integration Lab.
 
 #include "math/integration/Integration2D.hpp"

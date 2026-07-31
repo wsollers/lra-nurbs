@@ -1,8 +1,8 @@
 #pragma once
-// app/IntegrationLabAnalyticsPackets.hpp
+// app/simulations/examples/integration/IntegrationLabAnalyticsPackets.hpp
 // Render-packet adapter for the Integration Lab second-window analytics view.
 
-#include "app/IntegrationWorkbenchState.hpp"
+#include "app/simulations/examples/integration/IntegrationWorkbenchState.hpp"
 #include "engine/RenderService.hpp"
 #include "memory/MemoryService.hpp"
 

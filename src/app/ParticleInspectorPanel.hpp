@@ -2,8 +2,8 @@
 // app/ParticleInspectorPanel.hpp
 // Shared ImGui inspector for scene-owned particles.
 
-#include "app/AnimatedCurve.hpp"
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "memory/Containers.hpp"
 #include "sim/BrownianMotion.hpp"
 #include "sim/LevelCurveWalker.hpp"

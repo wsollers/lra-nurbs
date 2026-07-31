@@ -1,8 +1,8 @@
 // tests/test_simulation_context.cpp
 // GaussianSurface archived — using WavePredatorPreySurface instead.
 
-#include "app/SimulationContext.hpp"
-#include "app/AnimatedCurve.hpp"        // needed: SimVector<AnimatedCurve> requires complete type
+#include "simulation/particles/ParticleSimulationContext.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"        // needed: SimVector<AnimatedCurve> requires complete type
 #include "app/SurfaceRegistry.hpp"
 #include "memory/Containers.hpp"
 
@@ -14,7 +14,7 @@ namespace {
 using namespace ndde;
 
 TEST(SimulationContextState, TracksTickTimeAndDirtyState) {
-    SimulationContext context;
+    ParticleSimulationContext context;
     context.set_tick(TickInfo{.tick_index = 7u, .dt = 0.125f, .time = 2.5f, .paused = false});
 
     EXPECT_EQ(context.tick().tick_index, 7u);
@@ -34,7 +34,7 @@ TEST(SimulationContextState, TracksTickTimeAndDirtyState) {
 }
 
 TEST(SimulationContextState, SurfacePerturbationMarksSurfaceAndViewsDirty) {
-    SimulationContext context;
+    ParticleSimulationContext context;
     const u64 revision = context.math_cache().surface_revision;
 
     context.queue_perturbation(SurfacePerturbation{
@@ -55,7 +55,7 @@ TEST(SimulationContextState, MaintainsLegacySurfaceParticleRngView) {
     // AnimatedCurve.hpp included above — type is complete, vector is valid
     memory::SimVector<AnimatedCurve> particles{std::pmr::get_default_resource()};
     std::mt19937 rng(123u);
-    SimulationContext context(&surface, &particles, &rng);
+    ParticleSimulationContext context(&surface, &particles, &rng);
 
     EXPECT_TRUE(context.has_surface());
     EXPECT_TRUE(context.has_particles());

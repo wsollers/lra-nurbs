@@ -2,8 +2,8 @@
 // app/ProjectedParticleOverlay.hpp
 // ImGui overlay for projected surface scenes: trails, heads, hover Frenet, osc circle.
 
-#include "app/AnimatedCurve.hpp"
-#include "app/ParticleFactory.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleFactory.hpp"
 #include "memory/Containers.hpp"
 #include "numeric/ops.hpp"
 #include <imgui.h>

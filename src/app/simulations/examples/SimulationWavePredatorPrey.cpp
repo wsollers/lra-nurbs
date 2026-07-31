@@ -3,7 +3,7 @@
 
 #include "app/simulations/examples/SimulationWavePredatorPrey.hpp"
 #include "app/AlternateViewPanel.hpp"
-#include "app/FrenetFrame.hpp"
+#include "simulation/curves/FrenetFrame.hpp"
 #include "app/SimulationRenderPackets.hpp"
 #include "simulation/fields/MetricRipple.hpp"
 #include "telemetry/TelemetryRecord.hpp"

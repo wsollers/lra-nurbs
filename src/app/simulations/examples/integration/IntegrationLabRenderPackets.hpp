@@ -1,8 +1,8 @@
 #pragma once
-// app/IntegrationLabRenderPackets.hpp
+// app/simulations/examples/integration/IntegrationLabRenderPackets.hpp
 // Render-packet adapter for the 2D Integration Lab workbench.
 
-#include "app/IntegrationWorkbenchState.hpp"
+#include "app/simulations/examples/integration/IntegrationWorkbenchState.hpp"
 #include "engine/RenderService.hpp"
 #include "memory/MemoryService.hpp"
 

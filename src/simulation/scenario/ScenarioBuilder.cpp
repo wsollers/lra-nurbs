@@ -1,6 +1,6 @@
 // simulation/scenario/ScenarioBuilder.cpp
 #include "simulation/scenario/ScenarioBuilder.hpp"
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "telemetry/TelemetryRecord.hpp"
 #include "numeric/ops.hpp"
 #include <algorithm>

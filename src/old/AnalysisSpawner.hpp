@@ -1,9 +1,9 @@
 #pragma once
 
-#include "app/AnimatedCurve.hpp"
-#include "app/ParticleGoals.hpp"
-#include "app/ParticleSwarmFactory.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleGoals.hpp"
+#include "simulation/particles/ParticleSwarmFactory.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "math/SineRationalSurface.hpp"
 
 namespace ndde {

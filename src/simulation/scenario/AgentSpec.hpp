@@ -3,8 +3,8 @@
 // Declarative description of one agent in a scenario.
 // ScenarioBuilder consumes these to construct ParticleBuilder chains.
 
-#include "app/ParticleTypes.hpp"
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/particles/ParticleTypes.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "simulation/spawn/SpawnMode.hpp"
 #include "math/Scalars.hpp"
 #include <glm/glm.hpp>

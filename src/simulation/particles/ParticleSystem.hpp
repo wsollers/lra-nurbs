@@ -1,11 +1,11 @@
 #pragma once
-// app/ParticleSystem.hpp
+// simulation/particles/ParticleSystem.hpp
 // Scene-local owner for particles, particle constraints, and particle goals.
 
-#include "app/AnimatedCurve.hpp"
-#include "app/ParticleFactory.hpp"
-#include "app/ParticleGoals.hpp"
-#include "app/SimulationContext.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleFactory.hpp"
+#include "simulation/particles/ParticleGoals.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
 #include "engine/IScene.hpp"
 #include "memory/Containers.hpp"
 #include "memory/MemoryService.hpp"
@@ -80,7 +80,7 @@ public:
         return m_particles.back();
     }
 
-    void set_behavior_context(const SimulationContext* context) noexcept {
+    void set_behavior_context(const ParticleSimulationContext* context) noexcept {
         for (Particle& particle : m_particles)
             particle.set_behavior_context(context);
     }
@@ -96,7 +96,7 @@ public:
 
     void update(f32 dt, f32 speed_scale, f32 sim_time,
                 const simulation::FieldCompositor* fields = nullptr) {
-        SimulationContext context(m_surface, &m_particles, &m_rng, fields);
+        ParticleSimulationContext context(m_surface, &m_particles, &m_rng, fields);
         context.set_time(sim_time);
         for (auto& particle : m_particles) {
             particle.set_behavior_context(&context);
@@ -108,9 +108,9 @@ public:
         apply_pair_constraints();
     }
 
-    [[nodiscard]] SimulationContext context(f32 sim_time,
+    [[nodiscard]] ParticleSimulationContext context(f32 sim_time,
                                             const simulation::FieldCompositor* fields = nullptr) {
-        SimulationContext c(m_surface, &m_particles, &m_rng, fields);
+        ParticleSimulationContext c(m_surface, &m_particles, &m_rng, fields);
         c.set_time(sim_time);
         return c;
     }
@@ -134,7 +134,7 @@ public:
     }
 
     [[nodiscard]] GoalStatus evaluate_goals(f32 sim_time) {
-        SimulationContext c = context(sim_time);
+        ParticleSimulationContext c = context(sim_time);
         GoalStatus aggregate = GoalStatus::Running;
         for (const auto& goal : m_goals) {
             if (!goal) continue;

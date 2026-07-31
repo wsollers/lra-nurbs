@@ -3,7 +3,7 @@
 // Shared ImGui projected surface canvas for analytic surface scenes.
 
 #include "app/ProjectedParticleOverlay.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "app/Viewport.hpp"
 #include "engine/CanvasInput.hpp"

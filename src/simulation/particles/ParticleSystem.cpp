@@ -1,7 +1,7 @@
-#include "app/ParticleFactory.hpp"
-#include "app/SimulationContext.hpp"
-#include "app/ParticleBehaviors.hpp"
-#include "app/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleFactory.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
 
 #include <limits>
 
@@ -35,7 +35,7 @@ namespace {
                                         glm::vec2 from,
                                         const ndde::math::ISurface& surface,
                                         f32 t,
-                                        const SimulationContext& context,
+                                        const ParticleSimulationContext& context,
                                         ParticleId owner,
                                         f32 delay) noexcept {
     const AnimatedCurve* target = nullptr;
@@ -64,7 +64,7 @@ namespace {
 
 } // namespace
 
-const AnimatedCurve* SimulationContext::find(ParticleId id) const noexcept {
+const AnimatedCurve* ParticleSimulationContext::find(ParticleId id) const noexcept {
     if (!m_particles) return nullptr;
     for (const auto& particle : *m_particles) {
         if (particle.id() == id) return &particle;
@@ -72,7 +72,7 @@ const AnimatedCurve* SimulationContext::find(ParticleId id) const noexcept {
     return nullptr;
 }
 
-const AnimatedCurve* SimulationContext::first(ParticleRole role, ParticleId exclude) const noexcept {
+const AnimatedCurve* ParticleSimulationContext::first(ParticleRole role, ParticleId exclude) const noexcept {
     if (!m_particles) return nullptr;
     for (const auto& particle : *m_particles) {
         if (particle.id() != exclude && particle.particle_role() == role)
@@ -81,7 +81,7 @@ const AnimatedCurve* SimulationContext::first(ParticleRole role, ParticleId excl
     return nullptr;
 }
 
-const AnimatedCurve* SimulationContext::nearest(ParticleRole role, glm::vec2 from, ParticleId exclude) const noexcept {
+const AnimatedCurve* ParticleSimulationContext::nearest(ParticleRole role, glm::vec2 from, ParticleId exclude) const noexcept {
     if (!m_particles || !m_surface) return nullptr;
     const AnimatedCurve* best = nullptr;
     f32 best_d2 = std::numeric_limits<f32>::max();
@@ -97,7 +97,7 @@ const AnimatedCurve* SimulationContext::nearest(ParticleRole role, glm::vec2 fro
     return best;
 }
 
-glm::vec2 SimulationContext::centroid(ParticleRole role, ParticleId exclude) const noexcept {
+glm::vec2 ParticleSimulationContext::centroid(ParticleRole role, ParticleId exclude) const noexcept {
     if (!m_particles) return {0.f, 0.f};
     glm::vec2 sum{0.f, 0.f};
     u32 count = 0;
@@ -112,7 +112,7 @@ glm::vec2 SimulationContext::centroid(ParticleRole role, ParticleId exclude) con
 glm::vec2 SeekParticleBehavior::direction_to_target(glm::vec2 from,
                                                     const ndde::math::ISurface& surface,
                                                     f32 t,
-                                                    const SimulationContext& context,
+                                                    const ParticleSimulationContext& context,
                                                     ParticleId owner) const {
     const glm::vec2 target = target_position(m_p.target, from, surface, t, context, owner, m_p.delay_seconds);
     return normalize_or_zero(shortest_delta(target, from, surface));
@@ -121,7 +121,7 @@ glm::vec2 SeekParticleBehavior::direction_to_target(glm::vec2 from,
 glm::vec2 AvoidParticleBehavior::velocity(ndde::sim::ParticleState& state,
                                           const ndde::math::ISurface& surface,
                                           f32 t,
-                                          const SimulationContext& context,
+                                          const ParticleSimulationContext& context,
                                           ParticleId owner) const {
     const glm::vec2 target = target_position(m_p.target, state.uv, surface, t, context, owner, m_p.delay_seconds);
     return -normalize_or_zero(shortest_delta(target, state.uv, surface)) * m_p.speed;
@@ -130,7 +130,7 @@ glm::vec2 AvoidParticleBehavior::velocity(ndde::sim::ParticleState& state,
 glm::vec2 CentroidSeekBehavior::velocity(ndde::sim::ParticleState& state,
                                          const ndde::math::ISurface& surface,
                                          f32,
-                                         const SimulationContext& context,
+                                         const ParticleSimulationContext& context,
                                          ParticleId owner) const {
     const glm::vec2 target = context.centroid(m_p.role, owner);
     return normalize_or_zero(shortest_delta(target, state.uv, surface)) * m_p.speed;
@@ -139,7 +139,7 @@ glm::vec2 CentroidSeekBehavior::velocity(ndde::sim::ParticleState& state,
 glm::vec2 GradientDriftBehavior::velocity(ndde::sim::ParticleState& state,
                                           const ndde::math::ISurface& surface,
                                           f32,
-                                          const SimulationContext&,
+                                          const ParticleSimulationContext&,
                                           ParticleId) const {
     const glm::vec3 du = surface.du(state.uv.x, state.uv.y);
     const glm::vec3 dv = surface.dv(state.uv.x, state.uv.y);
@@ -173,7 +173,7 @@ std::string GradientDriftBehavior::metadata_label() const {
 glm::vec2 OrbitBehavior::velocity(ndde::sim::ParticleState& state,
                                   const ndde::math::ISurface& surface,
                                   f32,
-                                  const SimulationContext&,
+                                  const ParticleSimulationContext&,
                                   ParticleId) const {
     const glm::vec2 radial = shortest_delta(state.uv, m_p.center, surface);
     const f32 r = ops::length(radial);
@@ -188,7 +188,7 @@ glm::vec2 OrbitBehavior::velocity(ndde::sim::ParticleState& state,
 glm::vec2 FlockingBehavior::velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32,
-                                     const SimulationContext& context,
+                                     const ParticleSimulationContext& context,
                                      ParticleId owner) const {
     glm::vec2 separation{0.f, 0.f};
     glm::vec2 cohesion_sum{0.f, 0.f};

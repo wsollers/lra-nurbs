@@ -233,5 +233,5 @@ protected:
 };
 
 } // namespace ndde::math
-// GaussianRipple is declared in app/GaussianRipple.hpp (Step 3c)
+// GaussianRipple is declared in simulation/surfaces/GaussianRipple.hpp
 // to avoid the circular dependency: Surfaces.hpp <-> GaussianSurface.hpp.

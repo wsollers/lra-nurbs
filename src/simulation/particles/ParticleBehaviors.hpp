@@ -1,8 +1,8 @@
 #pragma once
-// app/ParticleBehaviors.hpp
+// simulation/particles/ParticleBehaviors.hpp
 // Composable behavior stack for particle dynamics.
 
-#include "app/SimulationContext.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
 #include "memory/Containers.hpp"
 #include "memory/MemoryService.hpp"
 #include "memory/Unique.hpp"
@@ -44,14 +44,14 @@ public:
         ndde::sim::ParticleState&    state,
         const ndde::math::ISurface&  surface,
         f32                        t,
-        const SimulationContext&     context,
+        const ParticleSimulationContext&     context,
         ParticleId                   owner) const = 0;
 
     [[nodiscard]] virtual glm::vec2 noise_coefficient(
         const ndde::sim::ParticleState& /*state*/,
         const ndde::math::ISurface&     /*surface*/,
         f32                           /*t*/,
-        const SimulationContext&        /*context*/,
+        const ParticleSimulationContext&        /*context*/,
         ParticleId                      /*owner*/) const
     {
         return {0.f, 0.f};
@@ -79,7 +79,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32 t,
-                                     const SimulationContext&,
+                                     const ParticleSimulationContext&,
                                      ParticleId) const override {
         return m_equation ? m_equation->update(state, surface, t) : glm::vec2{0.f, 0.f};
     }
@@ -87,7 +87,7 @@ public:
     [[nodiscard]] glm::vec2 noise_coefficient(const ndde::sim::ParticleState& state,
                                               const ndde::math::ISurface& surface,
                                               f32 t,
-                                              const SimulationContext&,
+                                              const ParticleSimulationContext&,
                                               ParticleId) const override {
         return m_equation ? m_equation->noise_coefficient(state, surface, t) : glm::vec2{0.f, 0.f};
     }
@@ -120,7 +120,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32,
-                                     const SimulationContext&,
+                                     const ParticleSimulationContext&,
                                      ParticleId) const override {
         if (ops::abs(m_p.drift_strength) < 1e-7f) return {0.f, 0.f};
         const glm::vec3 du = surface.du(state.uv.x, state.uv.y);
@@ -132,7 +132,7 @@ public:
     [[nodiscard]] glm::vec2 noise_coefficient(const ndde::sim::ParticleState&,
                                               const ndde::math::ISurface&,
                                               f32,
-                                              const SimulationContext&,
+                                              const ParticleSimulationContext&,
                                               ParticleId) const override {
         return {m_p.sigma, m_p.sigma};
     }
@@ -152,7 +152,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState&,
                                      const ndde::math::ISurface&,
                                      f32,
-                                     const SimulationContext&,
+                                     const ParticleSimulationContext&,
                                      ParticleId) const override {
         return m_velocity;
     }
@@ -179,7 +179,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32 t,
-                                     const SimulationContext& context,
+                                     const ParticleSimulationContext& context,
                                      ParticleId owner) const override {
         return direction_to_target(state.uv, surface, t, context, owner) * m_p.speed;
     }
@@ -196,7 +196,7 @@ private:
     [[nodiscard]] glm::vec2 direction_to_target(glm::vec2 from,
                                                 const ndde::math::ISurface& surface,
                                                 f32 t,
-                                                const SimulationContext& context,
+                                                const ParticleSimulationContext& context,
                                                 ParticleId owner) const;
 };
 
@@ -214,7 +214,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32 t,
-                                     const SimulationContext& context,
+                                     const ParticleSimulationContext& context,
                                      ParticleId owner) const override;
 
     [[nodiscard]] std::string metadata_label() const override {
@@ -243,7 +243,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32,
-                                     const SimulationContext& context,
+                                     const ParticleSimulationContext& context,
                                      ParticleId owner) const override;
 
     [[nodiscard]] std::string metadata_label() const override {
@@ -273,7 +273,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32,
-                                     const SimulationContext&,
+                                     const ParticleSimulationContext&,
                                      ParticleId) const override;
 
     [[nodiscard]] std::string metadata_label() const override;
@@ -298,7 +298,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32,
-                                     const SimulationContext&,
+                                     const ParticleSimulationContext&,
                                      ParticleId) const override;
 
     [[nodiscard]] std::string metadata_label() const override { return "Orbit"; }
@@ -325,7 +325,7 @@ public:
     [[nodiscard]] glm::vec2 velocity(ndde::sim::ParticleState& state,
                                      const ndde::math::ISurface& surface,
                                      f32,
-                                     const SimulationContext& context,
+                                     const ParticleSimulationContext& context,
                                      ParticleId owner) const override;
 
     [[nodiscard]] std::string metadata_label() const override { return "Flocking"; }
@@ -371,7 +371,7 @@ public:
         std::construct_at(&m_behaviors, std::move(rebound));
     }
 
-    void set_context(const SimulationContext* context) noexcept { m_context = context; }
+    void set_context(const ParticleSimulationContext* context) noexcept { m_context = context; }
     void set_owner(ParticleId owner) noexcept { m_owner = owner; }
 
     void add(memory::Unique<IParticleBehavior> behavior, f32 weight = 1.f) {
@@ -459,7 +459,7 @@ private:
     };
 
     memory::SimVector<Entry> m_behaviors;
-    const SimulationContext* m_context = nullptr;
+    const ParticleSimulationContext* m_context = nullptr;
     ParticleId m_owner = 0;
     SlopeVelocityTransform m_velocity_transform{};
 

@@ -14,9 +14,9 @@
 #include "simulation/events/SimEventTypes.hpp"
 #include "app/GoalStatusPanel.hpp"
 #include "app/ParticleInspectorPanel.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/SimulationControlPanel.hpp"
-#include "app/SimulationContext.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
 #include "app/SimulationPanelModels.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "app/SurfaceRegistry.hpp"
@@ -63,7 +63,7 @@ private:
 
     // ── Simulation domain ─────────────────────────────────────────────────────
     ParticleSystem      m_particles;
-    SimulationContext   m_context;
+    ParticleSimulationContext   m_context;
     SurfaceMeshCache    m_mesh;
 
     // ── Fields ────────────────────────────────────────────────────────────────

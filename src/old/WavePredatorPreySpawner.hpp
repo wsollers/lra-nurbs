@@ -1,8 +1,8 @@
 #pragma once
 
-#include "app/ParticleGoals.hpp"
-#include "app/ParticleSwarmFactory.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleGoals.hpp"
+#include "simulation/particles/ParticleSwarmFactory.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 
 namespace ndde {
 

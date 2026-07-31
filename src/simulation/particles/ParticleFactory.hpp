@@ -1,9 +1,9 @@
 #pragma once
-// app/ParticleFactory.hpp
+// simulation/particles/ParticleFactory.hpp
 // Fluent builder for composable particles.
 
-#include "app/AnimatedCurve.hpp"
-#include "app/ParticleBehaviors.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
 #include "memory/Containers.hpp"
 #include "memory/MemoryService.hpp"
 #include "sim/DomainConfinement.hpp"

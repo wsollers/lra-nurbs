@@ -2,7 +2,7 @@
 // app/SimulationRenderPackets.hpp
 // Shared renderer-neutral packet emission for ISimulation surface prototypes.
 
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "engine/CameraService.hpp"
 #include "engine/InteractionService.hpp"

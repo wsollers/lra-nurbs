@@ -1,4 +1,4 @@
-#include "app/IntegrationWorkbenchState.hpp"
+#include "app/simulations/examples/integration/IntegrationWorkbenchState.hpp"
 
 #include <array>
 #include <utility>

@@ -1,5 +1,5 @@
 #pragma once
-// app/ParticleTypes.hpp
+// simulation/particles/ParticleTypes.hpp
 // Shared particle vocabulary: roles, metadata, and visual trail policy.
 
 #include "memory/Containers.hpp"

@@ -3,7 +3,7 @@
 // Reusable controls for spawning named swarm recipes.
 
 #include "app/ParticleInspectorPanel.hpp"
-#include "app/ParticleSwarmFactory.hpp"
+#include "simulation/particles/ParticleSwarmFactory.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "memory/Containers.hpp"
 

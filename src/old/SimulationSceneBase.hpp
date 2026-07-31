@@ -4,8 +4,8 @@
 
 #include "engine/IScene.hpp"
 #include "app/HotkeyManager.hpp"
-#include "app/ParticleGoals.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleGoals.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "memory/Containers.hpp"
 
 #include <imgui.h>

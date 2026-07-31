@@ -2,7 +2,7 @@
 // app/ContourWindowRenderer.hpp
 // Shared submission path for the second-window contour map.
 
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "engine/EngineAPI.hpp"
 #include "engine/RenderSubmission.hpp"

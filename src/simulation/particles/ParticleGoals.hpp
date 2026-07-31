@@ -1,9 +1,9 @@
 #pragma once
-// app/ParticleGoals.hpp
+// simulation/particles/ParticleGoals.hpp
 // Scene-level goals / win conditions over composable particles.
 
-#include "app/SimulationContext.hpp"
-#include "app/AnimatedCurve.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
 #include "numeric/ops.hpp"
 #include <string>
 
@@ -19,7 +19,7 @@ class IParticleGoal {
 public:
     virtual ~IParticleGoal() = default;
 
-    [[nodiscard]] virtual GoalStatus evaluate(const SimulationContext& context) = 0;
+    [[nodiscard]] virtual GoalStatus evaluate(const ParticleSimulationContext& context) = 0;
     [[nodiscard]] virtual std::string metadata_label() const = 0;
 
 protected:
@@ -41,7 +41,7 @@ public:
     CaptureGoal() = default;
     explicit CaptureGoal(Params p) : m_p(p) {}
 
-    [[nodiscard]] GoalStatus evaluate(const SimulationContext& context) override {
+    [[nodiscard]] GoalStatus evaluate(const ParticleSimulationContext& context) override {
         for (const auto& seeker : context.particles()) {
             if (seeker.particle_role() != m_p.seeker_role) continue;
             const AnimatedCurve* target = context.nearest(m_p.target_role, seeker.head_uv(), seeker.id());
@@ -64,7 +64,7 @@ class SurvivalGoal final : public IParticleGoal {
 public:
     explicit SurvivalGoal(f32 duration_seconds) : m_duration(duration_seconds) {}
 
-    [[nodiscard]] GoalStatus evaluate(const SimulationContext& context) override {
+    [[nodiscard]] GoalStatus evaluate(const ParticleSimulationContext& context) override {
         return context.time() >= m_duration ? GoalStatus::Succeeded : GoalStatus::Running;
     }
 

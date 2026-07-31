@@ -1,13 +1,13 @@
 #pragma once
-// app/SimulationContext.hpp
-// Simulation state/context.
+// simulation/particles/ParticleSimulationContext.hpp
+// Particle simulation state/context.
 //
 // Compatibility note: existing particle behaviors currently receive a
 // lightweight view over surface/particle/RNG data.  The same type is being
 // extended into the owned simulation state container used by new
-// ISimulation-based simulations.
+// ISimulation-based particle simulations.
 
-#include "app/ParticleTypes.hpp"
+#include "simulation/particles/ParticleTypes.hpp"
 #include "engine/SimulationClock.hpp"
 #include "math/Surfaces.hpp"
 #include "memory/Containers.hpp"
@@ -87,14 +87,14 @@ struct SimulationCommandState {
     }
 };
 
-class SimulationContext {
+class ParticleSimulationContext {
 public:
-    SimulationContext() = default;
+    ParticleSimulationContext() = default;
 
-    SimulationContext(const ndde::math::ISurface* surface,
-                      const memory::SimVector<AnimatedCurve>* particles,
-                      std::mt19937* rng,
-                      const simulation::FieldCompositor* fields = nullptr) noexcept
+    ParticleSimulationContext(const ndde::math::ISurface* surface,
+                              const memory::SimVector<AnimatedCurve>* particles,
+                              std::mt19937* rng,
+                              const simulation::FieldCompositor* fields = nullptr) noexcept
         : m_surface(surface), m_particles(particles), m_rng(rng), m_fields(fields)
     {}
 

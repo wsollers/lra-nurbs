@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "app/ParticleBehaviors.hpp"
-#include "app/ParticleSwarmFactory.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleBehaviors.hpp"
+#include "simulation/particles/ParticleSwarmFactory.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "math/Surfaces.hpp"
 #include "memory/MemoryService.hpp"
 #include "simulation/fields/IField.hpp"
@@ -144,7 +144,7 @@ TEST(ParticleSystem, UpdateContextDoesNotEscapePastUpdate) {
         particle.equation()->noise_coefficient(particle.walk_state(), surface, 0.1f);
     EXPECT_EQ(unbound_sigma, glm::vec2(0.f, 0.f));
 
-    ndde::SimulationContext stable_context(&surface, &system.particles(), &system.rng(), &fields);
+    ndde::ParticleSimulationContext stable_context(&surface, &system.particles(), &system.rng(), &fields);
     stable_context.set_time(0.1f);
     system.set_behavior_context(&stable_context);
     const glm::vec2 rebound_sigma =

@@ -37,12 +37,10 @@ add_executable(ndde_tests
     # Re-enable when those sims are ported to the new simulation/ layer.
     # test_differential_system.cpp
     # test_simulation_surface_gaussian.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/AnimatedCurve.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/IntegrationLabAnalyticsPackets.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/IntegrationLabRenderPackets.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/IntegrationWorkbenchState.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/integration/IntegrationLabAnalyticsPackets.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/integration/IntegrationLabRenderPackets.cpp
+    ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/integration/IntegrationWorkbenchState.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SimulationLabPicker.cpp
-    ${CMAKE_SOURCE_DIR}/src/app/ParticleSystem.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SceneFactories.cpp
     ${CMAKE_SOURCE_DIR}/src/app/SurfaceMeshCache.cpp
     ${CMAKE_SOURCE_DIR}/src/app/simulations/LearningSimulation.cpp
@@ -51,7 +49,9 @@ add_executable(ndde_tests
     ${CMAKE_SOURCE_DIR}/src/app/simulations/examples/SimulationWavePredatorPrey.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/function/FunctionDerivativeWorkbench.cpp
     ${CMAKE_SOURCE_DIR}/src/app/workbenches/WorkbenchRegistry.cpp
+    ${CMAKE_SOURCE_DIR}/src/simulation/curves/AnimatedCurve.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/fields/IField.cpp
+    ${CMAKE_SOURCE_DIR}/src/simulation/particles/ParticleSystem.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/scenario/ScenarioBuilder.cpp
     ${CMAKE_SOURCE_DIR}/src/simulation/context/SimulationContext.cpp
     ${CMAKE_SOURCE_DIR}/src/engine/AppConfig.cpp

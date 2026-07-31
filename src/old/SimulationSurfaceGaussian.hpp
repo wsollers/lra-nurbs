@@ -2,13 +2,13 @@
 // app/SimulationSurfaceGaussian.hpp
 // First ISimulation-based version of the Gaussian surface simulation.
 
-#include "app/GaussianRipple.hpp"
+#include "simulation/surfaces/GaussianRipple.hpp"
 #include "app/GoalStatusPanel.hpp"
-#include "app/ParticleGoals.hpp"
+#include "simulation/particles/ParticleGoals.hpp"
 #include "app/ParticleInspectorPanel.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/SimulationControlPanel.hpp"
-#include "app/SimulationContext.hpp"
+#include "simulation/particles/ParticleSimulationContext.hpp"
 #include "app/SimulationPanelModels.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "app/SurfaceSimSpawner.hpp"
@@ -43,8 +43,8 @@ public:
     [[nodiscard]] SceneSnapshot snapshot() const override;
     [[nodiscard]] SimulationMetadata metadata() const override;
 
-    [[nodiscard]] const SimulationContext& context() const noexcept { return m_context; }
-    [[nodiscard]] SimulationContext& context() noexcept { return m_context; }
+    [[nodiscard]] const ParticleSimulationContext& context() const noexcept { return m_context; }
+    [[nodiscard]] ParticleSimulationContext& context() noexcept { return m_context; }
     [[nodiscard]] RenderViewId main_view_id() const noexcept { return m_main_view; }
     [[nodiscard]] RenderViewId alternate_view_id() const noexcept { return m_alternate_view; }
     [[nodiscard]] std::size_t particle_count() const noexcept { return m_particles.size(); }
@@ -53,7 +53,7 @@ private:
     memory::Unique<GaussianRipple> m_surface;
     ParticleSystem m_particles;
     SurfaceSimSpawner m_spawner;
-    SimulationContext m_context;
+    ParticleSimulationContext m_context;
     SurfaceMeshCache m_mesh;
 
     SimulationHost* m_host = nullptr;

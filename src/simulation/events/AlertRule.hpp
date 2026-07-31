@@ -9,7 +9,7 @@
 #include "simulation/events/EventRing.hpp"
 #include "math/GeometryTypes.hpp"
 #include "math/Scalars.hpp"
-#include "app/ParticleTypes.hpp"
+#include "simulation/particles/ParticleTypes.hpp"
 #include "memory/Unique.hpp"
 #include <array>
 #include <functional>

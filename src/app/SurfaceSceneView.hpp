@@ -1,7 +1,7 @@
 #pragma once
 
 #include "app/ContourWindowRenderer.hpp"
-#include "app/ParticleSystem.hpp"
+#include "simulation/particles/ParticleSystem.hpp"
 #include "app/ProjectedSurfaceCanvas.hpp"
 #include "app/SurfaceMeshCache.hpp"
 #include "app/Viewport.hpp"

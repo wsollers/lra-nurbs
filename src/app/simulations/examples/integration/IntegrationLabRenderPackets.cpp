@@ -1,4 +1,4 @@
-#include "app/IntegrationLabRenderPackets.hpp"
+#include "app/simulations/examples/integration/IntegrationLabRenderPackets.hpp"
 
 #include <algorithm>
 #include <cmath>

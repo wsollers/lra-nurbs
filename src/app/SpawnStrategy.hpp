@@ -15,7 +15,7 @@
 //   Leader / Chaser:       prewarm = true  (60 frames default)
 //   Delay-pursuit chaser:  prewarm = false (must wait for leader history)
 
-#include "app/AnimatedCurve.hpp"
+#include "simulation/curves/AnimatedCurve.hpp"
 #include "numeric/ops.hpp"
 #include "math/Surfaces.hpp"
 #include "memory/Containers.hpp"

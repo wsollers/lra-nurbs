@@ -125,12 +125,10 @@ target_link_libraries(ndde_engine PUBLIC
 # Old simulations have been moved to src/old/ and are not compiled.
 add_executable(nurbs_dde
     app/main.cpp
-    app/AnimatedCurve.cpp
-    app/IntegrationLabAnalyticsPackets.cpp
-    app/IntegrationLabRenderPackets.cpp
-    app/IntegrationWorkbenchState.cpp
+    app/simulations/examples/integration/IntegrationLabAnalyticsPackets.cpp
+    app/simulations/examples/integration/IntegrationLabRenderPackets.cpp
+    app/simulations/examples/integration/IntegrationWorkbenchState.cpp
     app/SimulationLabPicker.cpp
-    app/ParticleSystem.cpp
     app/SceneFactories.cpp
     app/SurfaceMeshCache.cpp
     app/simulations/LearningSimulation.cpp
@@ -139,7 +137,9 @@ add_executable(nurbs_dde
     app/simulations/examples/SimulationWavePredatorPrey.cpp
     app/workbenches/function/FunctionDerivativeWorkbench.cpp
     app/workbenches/WorkbenchRegistry.cpp
+    simulation/curves/AnimatedCurve.cpp
     simulation/fields/IField.cpp
+    simulation/particles/ParticleSystem.cpp
     simulation/scenario/ScenarioBuilder.cpp
 )
 target_include_directories(nurbs_dde PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

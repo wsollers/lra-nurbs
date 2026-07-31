@@ -68,7 +68,7 @@
 //  TOTAL                             32   4-byte multiple, 8-byte aligned ✓
 
 #include "math/Scalars.hpp"
-#include "app/ParticleTypes.hpp"
+#include "simulation/particles/ParticleTypes.hpp"
 
 namespace ndde::telemetry {
 
