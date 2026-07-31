@@ -5,7 +5,7 @@
 #include "engine/CameraTypes.hpp"
 #include "engine/InteractionService.hpp"
 #include "engine/RenderService.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <algorithm>
 #include <string_view>

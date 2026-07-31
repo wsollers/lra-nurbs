@@ -2,7 +2,7 @@
 
 # ── ndde_numeric ─────────────────────────────────────────────────────────────
 # Zero external dependencies. Safe to link from Python bindings.
-# All headers are in src/numeric/*.hpp (header-only; the .cpp stub exists to
+# All headers are in src/math/numeric/*.hpp (header-only; the .cpp stub exists to
 # give CMake a translation unit and to hold future non-inline implementations).
 add_library(ndde_numeric INTERFACE)
 target_include_directories(ndde_numeric INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -49,19 +49,19 @@ target_link_libraries(ndde_memory PUBLIC ndde_math volk)
 
 # ── ndde_platform ─────────────────────────────────────────────────────────────
 add_library(ndde_platform STATIC
-    platform/GlfwContext.cpp
-    platform/VulkanContext.cpp
+    engine/platform/GlfwContext.cpp
+    engine/platform/VulkanContext.cpp
 )
 target_include_directories(ndde_platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ndde_platform PUBLIC ndde_math volk vk-bootstrap::vk-bootstrap glfw)
 
 # ── ndde_renderer ─────────────────────────────────────────────────────────────
 add_library(ndde_renderer STATIC
-    renderer/Swapchain.cpp
-    renderer/Pipeline.cpp
-    renderer/ImGuiLayer.cpp
-    renderer/Renderer.cpp
-    renderer/SecondWindow.cpp
+    engine/renderer/Swapchain.cpp
+    engine/renderer/Pipeline.cpp
+    engine/renderer/ImGuiLayer.cpp
+    engine/renderer/Renderer.cpp
+    engine/renderer/SecondWindow.cpp
 )
 target_include_directories(ndde_renderer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ndde_renderer PUBLIC
@@ -74,8 +74,8 @@ target_link_libraries(ndde_renderer PUBLIC
 # ── ndde_telemetry ────────────────────────────────────────────────────────────
 # No Vulkan dependency -- only uses ndde_math (for scalar types) and std I/O.
 add_library(ndde_telemetry STATIC
-    telemetry/TelemetryService.cpp
-    telemetry/TelemetryWriter.cpp
+    engine/telemetry/TelemetryService.cpp
+    engine/telemetry/TelemetryWriter.cpp
 )
 target_include_directories(ndde_telemetry PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ndde_telemetry PUBLIC ndde_math)

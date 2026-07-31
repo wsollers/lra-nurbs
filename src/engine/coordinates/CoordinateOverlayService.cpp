@@ -1,7 +1,7 @@
 #include "engine/coordinates/CoordinateOverlayService.hpp"
 
 #include "math/Axes.hpp"
-#include "numeric/Constants.hpp"
+#include "math/numeric/Constants.hpp"
 
 #include <algorithm>
 #include <cmath>

@@ -18,7 +18,7 @@
 // because those equations ignore state.angle entirely.
 
 #include "sim/IConstraint.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <algorithm>
 
 namespace ndde::sim {

@@ -8,7 +8,7 @@
 // Nothing outside this file needs to include GaussianSurface.hpp.
 
 #include "math/Surfaces.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <cmath>
 
 namespace ndde {

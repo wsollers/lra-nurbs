@@ -16,7 +16,7 @@
 //   Delay-pursuit chaser:  prewarm = false (must wait for leader history)
 
 #include "simulation/curves/AnimatedCurve.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include "math/Surfaces.hpp"
 #include "memory/Containers.hpp"
 #include "sim/IEquation.hpp"

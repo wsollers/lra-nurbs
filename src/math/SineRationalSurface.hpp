@@ -33,7 +33,7 @@
 // Both are computed exactly — no finite differences.
 
 #include "math/Surfaces.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <cmath>
 
 namespace ndde::math {

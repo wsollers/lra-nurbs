@@ -13,7 +13,7 @@
 // any translation unit that must remain Vulkan-free (Python bindings, tests).
 //
 // Migration status: all math/* headers now include Scalars.hpp directly.
-// Remaining users of Types.hpp: renderer/*, memory/*, engine/*, app/* — all
+// Remaining users of Types.hpp: engine/renderer/*, memory/*, engine/*, app/* — all
 // of which already carry an indirect Vulkan dependency and are not affected
 // by the split.
 

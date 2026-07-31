@@ -1,6 +1,6 @@
 #include "engine/SimulationHost.hpp"
 #include "engine/threading/ThreadManagementService.hpp"
-#include "telemetry/TelemetryService.hpp"
+#include "engine/telemetry/TelemetryService.hpp"
 
 #include <gtest/gtest.h>
 

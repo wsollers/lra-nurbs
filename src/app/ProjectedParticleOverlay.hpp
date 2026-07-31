@@ -5,7 +5,7 @@
 #include "simulation/curves/AnimatedCurve.hpp"
 #include "simulation/particles/ParticleFactory.hpp"
 #include "memory/Containers.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <imgui.h>
 #include <algorithm>
 #include <cstdio>

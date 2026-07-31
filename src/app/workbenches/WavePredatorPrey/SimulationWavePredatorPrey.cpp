@@ -6,7 +6,7 @@
 #include "simulation/curves/FrenetFrame.hpp"
 #include "app/SimulationRenderPackets.hpp"
 #include "simulation/fields/MetricRipple.hpp"
-#include "telemetry/TelemetryRecord.hpp"
+#include "engine/telemetry/TelemetryRecord.hpp"
 #include "memory/Containers.hpp"
 #include <imgui.h>
 #include <algorithm>

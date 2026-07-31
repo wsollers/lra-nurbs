@@ -27,9 +27,9 @@
 // interface level, but goal-switching state must persist across velocity() calls.
 
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include "math/ExtremumTable.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <glm/glm.hpp>
 #include <cmath>
 #include <string>

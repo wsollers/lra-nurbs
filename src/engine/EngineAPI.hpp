@@ -6,7 +6,7 @@
 #include "memory/ArenaSlice.hpp"
 #include "engine/AppConfig.hpp"
 #include "math/Scalars.hpp"
-#include "telemetry/TelemetryRecord.hpp"
+#include "engine/telemetry/TelemetryRecord.hpp"
 #include <cstddef>
 #include <functional>
 

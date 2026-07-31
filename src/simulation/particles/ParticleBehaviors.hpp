@@ -8,7 +8,7 @@
 #include "memory/Unique.hpp"
 #include "simulation/fields/IField.hpp"
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <algorithm>
 #include <limits>
 #include <string>

@@ -14,7 +14,7 @@
 //
 // Renderer-neutral geometry payloads live in math/GeometryTypes.hpp.
 // Vulkan-specific push constants and VkVertexInput helpers live in
-// renderer/GpuTypes.hpp.
+// engine/renderer/GpuTypes.hpp.
 //
 // ── Scalar aliases ────────────────────────────────────────────────────────────
 //   f32 / f64  — IEEE-754 single/double, native on every x64 target we care

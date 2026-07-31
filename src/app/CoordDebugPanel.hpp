@@ -8,7 +8,7 @@
 #include "app/HoverResult.hpp"
 #include "math/Scalars.hpp"
 #include "memory/Containers.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <imgui.h>
 #include <string>

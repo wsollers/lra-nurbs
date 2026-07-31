@@ -4,7 +4,7 @@
 // Zero-copy design: tessellate() writes directly into GPU-visible memory.
 
 #include "math/Scalars.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include "math/GeometryTypes.hpp"
 #include <span>
 #include <stdexcept>

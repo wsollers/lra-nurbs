@@ -7,7 +7,7 @@
 #include "simulation/particles/ParticleSystem.hpp"
 #include "memory/Containers.hpp"
 #include "sim/LevelCurveWalker.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <algorithm>
 #include <random>
 #include <string>

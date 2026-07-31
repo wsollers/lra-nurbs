@@ -43,7 +43,7 @@
 // Set drift_strength = 0 for pure isotropic Brownian motion.
 
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <glm/glm.hpp>
 
 namespace ndde::sim {

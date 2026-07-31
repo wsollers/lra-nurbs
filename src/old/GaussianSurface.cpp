@@ -7,7 +7,7 @@
 #include "sim/IIntegrator.hpp"
 #include "sim/HistoryBuffer.hpp"
 #include "sim/DomainConfinement.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <cmath>
 #include <stdexcept>
 #include <algorithm>

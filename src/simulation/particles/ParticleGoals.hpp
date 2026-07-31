@@ -4,7 +4,7 @@
 
 #include "simulation/particles/ParticleSimulationContext.hpp"
 #include "simulation/curves/AnimatedCurve.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <string>
 
 namespace ndde {

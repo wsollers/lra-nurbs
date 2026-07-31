@@ -1,7 +1,7 @@
 // simulation/events/AlertRule.cpp
 #include "simulation/events/AlertRule.hpp"
 #include "math/Surfaces.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <glm/glm.hpp>
 #include <limits>
 

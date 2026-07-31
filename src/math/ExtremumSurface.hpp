@@ -14,7 +14,7 @@
 // surface ideal for the ExtremumTable grid search.
 
 #include "math/Surfaces.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <cmath>
 #include <glm/glm.hpp>
 

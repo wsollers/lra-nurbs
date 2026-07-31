@@ -12,11 +12,11 @@
 //   - Tolerances are set to 10x the theoretical FD error bound where possible.
 
 #include <gtest/gtest.h>
-#include "numeric/Constants.hpp"
-#include "numeric/MathTraits.hpp"
-#include "numeric/ops.hpp"
-#include "numeric/Vec3Ops.hpp"
-#include "numeric/Differentiator.hpp"
+#include "math/numeric/Constants.hpp"
+#include "math/numeric/MathTraits.hpp"
+#include "math/numeric/ops.hpp"
+#include "math/numeric/Vec3Ops.hpp"
+#include "math/numeric/Differentiator.hpp"
 #include <cmath>
 #include <numbers>
 #include <glm/glm.hpp>

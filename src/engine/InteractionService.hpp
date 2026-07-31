@@ -6,7 +6,7 @@
 #include "math/Surfaces.hpp"
 #include "memory/Containers.hpp"
 #include "memory/MemoryService.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <algorithm>
 #include <limits>

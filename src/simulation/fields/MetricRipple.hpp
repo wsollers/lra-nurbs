@@ -17,7 +17,7 @@
 
 #include "simulation/fields/IField.hpp"
 #include "simulation/events/SimEventTypes.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <string>
 
 namespace ndde::simulation {

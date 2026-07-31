@@ -11,7 +11,7 @@
 // In practice: [this]{ return m_curves[0].head_uv(); }
 
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <functional>
 #include <glm/glm.hpp>
 #include <cmath>

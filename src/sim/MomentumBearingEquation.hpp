@@ -20,7 +20,7 @@
 // This is Strategy C from docs/ctrl_a_leader_seeker.md.
 
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include "sim/HistoryBuffer.hpp"
 #include <glm/glm.hpp>
 #include <cmath>

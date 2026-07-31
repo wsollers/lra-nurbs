@@ -47,7 +47,7 @@
 //   Z2 = sqrt(-2 ln U1) * sin(2*pi*U2)   ~ N(0,1)
 
 #include "sim/IIntegrator.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <glm/glm.hpp>
 #include <random>
 

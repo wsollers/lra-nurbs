@@ -25,7 +25,7 @@
 // is eliminated in this step.
 
 #include "sim/IIntegrator.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <glm/glm.hpp>
 
 namespace ndde::sim {

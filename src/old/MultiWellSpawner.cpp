@@ -2,7 +2,7 @@
 
 #include "simulation/particles/ParticleBehaviors.hpp"
 #include "memory/Containers.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <utility>
 

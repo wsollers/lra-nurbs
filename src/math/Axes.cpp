@@ -1,6 +1,6 @@
 // math/Axes.cpp
 #include "math/Axes.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <cmath>
 #include <stdexcept>
 #include <algorithm>

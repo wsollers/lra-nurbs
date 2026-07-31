@@ -7,7 +7,7 @@
 #include "app/SurfaceMeshCache.hpp"
 #include "app/Viewport.hpp"
 #include "engine/CanvasInput.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <imgui.h>
 #include <algorithm>

@@ -5,7 +5,7 @@
 #include "engine/RenderService.hpp"
 #include "engine/metadata/MetadataTypes.hpp"
 #include "math/GeometryTypes.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <algorithm>
 #include <cmath>

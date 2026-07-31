@@ -45,7 +45,7 @@
 //               smooths direction reversals at gradient discontinuities
 
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <algorithm>
 #include <string>
 

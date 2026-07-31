@@ -28,7 +28,7 @@
 // owns the mutation contract -- it passes mutable state to the equation.
 
 #include "sim/IEquation.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <algorithm>
 
 namespace ndde::sim {

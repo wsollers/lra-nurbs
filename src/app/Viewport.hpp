@@ -17,7 +17,7 @@
 // calling pixel_to_world / zoom_toward / pan_by_pixels.
 
 #include "math/Scalars.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>

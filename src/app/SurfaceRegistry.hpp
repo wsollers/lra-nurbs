@@ -6,7 +6,7 @@
 #include "math/Surfaces.hpp"
 #include "memory/MemoryService.hpp"
 #include "memory/Unique.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 
 #include <string_view>
 

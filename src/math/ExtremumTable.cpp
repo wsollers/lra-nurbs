@@ -1,8 +1,8 @@
 // math/ExtremumTable.cpp
 #include "math/ExtremumTable.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include "math/Surfaces.hpp"
-#include "numeric/ops.hpp"
+#include "math/numeric/ops.hpp"
 #include <limits>
 #include <algorithm>
 #include <cmath>

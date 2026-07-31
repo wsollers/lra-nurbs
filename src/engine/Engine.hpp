@@ -11,13 +11,13 @@
 // Listed explicitly here only so TelemetryService.hpp finds them.
 #include "engine/events/AppEvent.hpp"
 #include "engine/events/SimEvent.hpp"
-#include "platform/GlfwContext.hpp"
-#include "platform/VulkanContext.hpp"
-#include "renderer/Swapchain.hpp"
-#include "renderer/Renderer.hpp"
-#include "renderer/SecondWindow.hpp"
+#include "engine/platform/GlfwContext.hpp"
+#include "engine/platform/VulkanContext.hpp"
+#include "engine/renderer/Swapchain.hpp"
+#include "engine/renderer/Renderer.hpp"
+#include "engine/renderer/SecondWindow.hpp"
 #include "memory/Containers.hpp"
-#include "telemetry/TelemetryService.hpp"
+#include "engine/telemetry/TelemetryService.hpp"
 #include "simulation/events/EngineEventTypes.hpp"
 #include <filesystem>
 #include <functional>
