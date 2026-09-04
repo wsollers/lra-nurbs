@@ -9,6 +9,7 @@ through MemoryService and memory::Unique.
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -33,7 +34,18 @@ def strip_line_comment(line: str) -> str:
     return code.replace("= delete", "")
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Fail if dynamic allocation escapes the allocator layer in project "
+            "source files outside the central memory package."
+        )
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parse_args(argv)
     violations: list[str] = []
     for root in SOURCE_ROOTS:
         for path in root.rglob("*"):

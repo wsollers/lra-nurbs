@@ -1,3 +1,40 @@
+<#
+.SYNOPSIS
+Converts a video, still image, or image-sequence directory into an MP4.
+
+.DESCRIPTION
+Wraps ffmpeg to create an H.264 MP4 from a source file or a directory of image
+frames. Directories prefer numbered frame patterns such as frame_000001.png and
+fall back to common PNG/JPG globs when needed.
+
+.PARAMETER InputPath
+Path to an input video file, still image, or directory containing image frames.
+
+.PARAMETER OutputPath
+Optional output MP4 path. When omitted, the script derives a default `.mp4`
+path from the input file or directory name.
+
+.PARAMETER FrameRate
+Frame rate to use for image sequences and looped still images.
+
+.PARAMETER StillDurationSeconds
+Duration in seconds for a single still image input before encoding.
+
+.PARAMETER FfmpegPath
+Path or command name for the ffmpeg executable to invoke.
+
+.PARAMETER Overwrite
+Allows replacing an existing output file.
+
+.PARAMETER OpenWhenDone
+Opens the generated MP4 after a successful conversion.
+
+.EXAMPLE
+.\Convert-ToMp4.ps1 -InputPath .\frames -FrameRate 30 -Overwrite
+
+.EXAMPLE
+.\Convert-ToMp4.ps1 -InputPath .\image.png -StillDurationSeconds 8 -OutputPath .\image.mp4
+#>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true, Position = 0)]

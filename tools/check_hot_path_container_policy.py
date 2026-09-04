@@ -8,6 +8,7 @@ aliases so the implementation can later move to PMR/arena-backed storage.
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -51,7 +52,18 @@ def strip_line_comment(line: str) -> str:
     return line.split("//", 1)[0]
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Fail if selected hot-path files name std::vector directly instead "
+            "of project container policy aliases."
+        )
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parse_args(argv)
     violations: list[str] = []
     for path in HOT_PATH_FILES:
         if not path.exists():
