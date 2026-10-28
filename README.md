@@ -54,6 +54,17 @@ docker run --rm -v "$PWD:/workspace" -w /workspace lra-nurbs-linux bash -lc \
    ctest --test-dir build --output-on-failure --parallel 4'
 ```
 
+Native Windows builds must enter the Visual Studio x64 developer environment
+before invoking Ninja. The repository helper locates and loads that environment
+automatically:
+
+    .\tools\build-msvc.ps1 -Configuration Debug
+    .\tools\build-msvc.ps1 -Configuration Release
+
+Do not reuse an MSVC CMake cache from an ordinary PowerShell session. A cached
+absolute path to `cl.exe` is not sufficient: without `vcvars64.bat`, MSVC does
+not receive its standard-library and Windows SDK include paths.
+
 Native Linux builds use the same CMake shape:
 
 ```bash

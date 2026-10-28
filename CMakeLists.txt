@@ -8,8 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ── Compiler guard ────────────────────────────────────────────────────────────
-if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(WARNING "This project targets Clang. Current: ${CMAKE_CXX_COMPILER_ID}")
+# Linux uses Clang/libc++; the Windows CI lane intentionally uses MSVC.
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "^(Clang|MSVC)$")
+    message(WARNING "This project supports Clang and MSVC. Current: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
 # ── Build type default ────────────────────────────────────────────────────────
